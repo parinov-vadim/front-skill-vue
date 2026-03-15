@@ -1,0 +1,186 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* ─── Design System: FrontSkill ─── */
+
+@theme {
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+  /* ── Difficulty: Easy (emerald-teal) ── */
+  --color-easy-50:  oklch(0.97 0.03 162);
+  --color-easy-100: oklch(0.93 0.07 162);
+  --color-easy-200: oklch(0.87 0.12 162);
+  --color-easy-300: oklch(0.80 0.16 162);
+  --color-easy-400: oklch(0.72 0.19 162);
+  --color-easy-500: oklch(0.65 0.20 162);
+  --color-easy-600: oklch(0.55 0.18 162);
+  --color-easy-700: oklch(0.45 0.15 162);
+  --color-easy-800: oklch(0.34 0.10 162);
+  --color-easy-900: oklch(0.24 0.07 162);
+  --color-easy-950: oklch(0.15 0.04 162);
+
+  /* ── Difficulty: Medium (amber) ── */
+  --color-medium-50:  oklch(0.98 0.03 82);
+  --color-medium-100: oklch(0.95 0.07 82);
+  --color-medium-200: oklch(0.90 0.13 82);
+  --color-medium-300: oklch(0.85 0.17 82);
+  --color-medium-400: oklch(0.80 0.20 82);
+  --color-medium-500: oklch(0.75 0.22 82);
+  --color-medium-600: oklch(0.65 0.20 82);
+  --color-medium-700: oklch(0.53 0.16 82);
+  --color-medium-800: oklch(0.41 0.11 82);
+  --color-medium-900: oklch(0.30 0.07 82);
+  --color-medium-950: oklch(0.19 0.04 82);
+
+  /* ── Difficulty: Hard (rose-red) ── */
+  --color-hard-50:  oklch(0.97 0.02 15);
+  --color-hard-100: oklch(0.94 0.06 15);
+  --color-hard-200: oklch(0.88 0.11 15);
+  --color-hard-300: oklch(0.81 0.16 15);
+  --color-hard-400: oklch(0.73 0.21 15);
+  --color-hard-500: oklch(0.64 0.25 15);
+  --color-hard-600: oklch(0.54 0.23 15);
+  --color-hard-700: oklch(0.44 0.19 15);
+  --color-hard-800: oklch(0.33 0.13 15);
+  --color-hard-900: oklch(0.23 0.08 15);
+  --color-hard-950: oklch(0.14 0.05 15);
+
+  /* ── Difficulty: Expert (violet-purple) ── */
+  --color-expert-50:  oklch(0.97 0.02 280);
+  --color-expert-100: oklch(0.93 0.06 280);
+  --color-expert-200: oklch(0.87 0.11 280);
+  --color-expert-300: oklch(0.79 0.17 280);
+  --color-expert-400: oklch(0.70 0.23 280);
+  --color-expert-500: oklch(0.62 0.27 280);
+  --color-expert-600: oklch(0.54 0.25 280);
+  --color-expert-700: oklch(0.44 0.20 280);
+  --color-expert-800: oklch(0.33 0.14 280);
+  --color-expert-900: oklch(0.23 0.09 280);
+  --color-expert-950: oklch(0.14 0.05 280);
+
+  /* ── Editor / Surface tones (cool-dark) ── */
+  --color-surface-50:  oklch(0.98 0.005 240);
+  --color-surface-100: oklch(0.95 0.008 240);
+  --color-surface-200: oklch(0.90 0.010 240);
+  --color-surface-300: oklch(0.80 0.012 240);
+  --color-surface-400: oklch(0.65 0.015 240);
+  --color-surface-500: oklch(0.50 0.015 240);
+  --color-surface-600: oklch(0.38 0.012 240);
+  --color-surface-700: oklch(0.27 0.010 240);
+  --color-surface-800: oklch(0.18 0.008 240);
+  --color-surface-900: oklch(0.12 0.006 240);
+  --color-surface-950: oklch(0.08 0.004 240);
+
+  /* ── Spacing extras ── */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-88: 22rem;
+  --spacing-128: 32rem;
+
+  /* ── Border radius ── */
+  --radius-xs: 0.25rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+/* ─── CSS Custom Properties (runtime, not Tailwind utilities) ─── */
+:root {
+  /* Tech tag brand colors */
+  --tag-html:       #e34f26;
+  --tag-html-bg:    #fef2ef;
+  --tag-css:        #1572b6;
+  --tag-css-bg:     #eef5fd;
+  --tag-js:         #c9a800;
+  --tag-js-bg:      #fffbe6;
+  --tag-ts:         #3178c6;
+  --tag-ts-bg:      #eef4fc;
+  --tag-vue:        #3fb27f;
+  --tag-vue-bg:     #f0faf6;
+  --tag-react:      #087ea4;
+  --tag-react-bg:   #edf7fb;
+  --tag-angular:    #c3002f;
+  --tag-angular-bg: #fceef1;
+  --tag-sass:       #c76494;
+  --tag-sass-bg:    #fdf0f6;
+  --tag-webpack:    #2b6eb5;
+  --tag-webpack-bg: #eef3fc;
+  --tag-vite:       #6466f1;
+  --tag-vite-bg:    #f0f0fe;
+  --tag-nuxt:       #00c58e;
+  --tag-nuxt-bg:    #ebfbf6;
+  --tag-next:       #111827;
+  --tag-next-bg:    #f4f4f5;
+  --tag-svg:        #f88b00;
+  --tag-svg-bg:     #fff5e6;
+  --tag-a11y:       #7c3aed;
+  --tag-a11y-bg:    #f5f0ff;
+
+  /* Solved status */
+  --status-solved:     oklch(0.65 0.20 162);
+  --status-attempted:  oklch(0.75 0.22 82);
+  --status-unsolved:   oklch(0.50 0.015 240);
+
+  /* Editor */
+  --editor-bg:         #0f1117;
+  --editor-gutter:     #1a1f2e;
+  --editor-line-hl:    #1e2433;
+  --editor-selection:  #2d4263;
+  --editor-cursor:     #528bff;
+}
+
+/* Dark mode adjustments for tech tags */
+.dark {
+  --tag-html-bg:    #2a1a14;
+  --tag-css-bg:     #121e2a;
+  --tag-js-bg:      #251f0a;
+  --tag-ts-bg:      #121e2a;
+  --tag-vue-bg:     #0d1f18;
+  --tag-react-bg:   #0a1e25;
+  --tag-angular-bg: #210d12;
+  --tag-sass-bg:    #21101a;
+  --tag-webpack-bg: #121b28;
+  --tag-vite-bg:    #141421;
+  --tag-nuxt-bg:    #081f18;
+  --tag-next-bg:    #18181b;
+  --tag-svg-bg:     #1f1508;
+  --tag-a11y-bg:    #160f26;
+}
+
+/* ─── Utility classes ─── */
+
+/* Difficulty badges */
+.badge-easy   { color: var(--color-easy-600);   background: oklch(from var(--color-easy-500) l c h / 0.12); }
+.badge-medium { color: var(--color-medium-600); background: oklch(from var(--color-medium-500) l c h / 0.12); }
+.badge-hard   { color: var(--color-hard-600);   background: oklch(from var(--color-hard-500) l c h / 0.12); }
+.badge-expert { color: var(--color-expert-600); background: oklch(from var(--color-expert-500) l c h / 0.12); }
+
+.dark .badge-easy   { color: var(--color-easy-400);   background: oklch(from var(--color-easy-500) l c h / 0.18); }
+.dark .badge-medium { color: var(--color-medium-400); background: oklch(from var(--color-medium-500) l c h / 0.18); }
+.dark .badge-hard   { color: var(--color-hard-400);   background: oklch(from var(--color-hard-500) l c h / 0.18); }
+.dark .badge-expert { color: var(--color-expert-400); background: oklch(from var(--color-expert-500) l c h / 0.18); }
+
+/* Code editor surface */
+.editor-surface {
+  background-color: var(--editor-bg);
+  font-family: var(--font-mono);
+}
+
+/* Solved status dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+.status-dot-solved    { background: var(--status-solved); }
+.status-dot-attempted { background: var(--status-attempted); }
+.status-dot-unsolved  { background: var(--status-unsolved); }
+
+/* Smooth transitions */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
