@@ -16,8 +16,8 @@ RUN bun run build
 # ── Stage 2: Runtime ─────────────────────────────────
 FROM oven/bun:1-alpine
 
-RUN addgroup -S app && adduser -S app -G app
-
+RUN apk add --no-cache curl \
+    && addgroup -S app && adduser -S app -G app
 WORKDIR /app
 
 # Nuxt output — Nitro сервер + public assets
