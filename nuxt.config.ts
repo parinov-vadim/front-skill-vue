@@ -57,15 +57,8 @@ export default defineNuxtConfig({
   linkChecker: {
     enabled: false,
   },
-  routeRules: {
-    '/docs/**': { prerender: true },
-  },
   nitro: {
-    preset: 'node-server',
-    prerender: {
-      crawlLinks: false,
-      routes: getDocsRoutes(),
-    },
+    preset: 'bun',
   },
   css: ['~/styles.css'],
 })
