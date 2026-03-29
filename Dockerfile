@@ -1,5 +1,5 @@
 # ── Stage 1: Build ────────────────────────────────────
-FROM oven/bun:1-alpine AS builder
+FROM oven/bun:1.3.11-alpine AS builder
 
 # Зависимости для компиляции нативных модулей (better-sqlite3)
 RUN apk add --no-cache python3 make g++
@@ -14,7 +14,7 @@ COPY . .
 RUN bun run build
 
 # ── Stage 2: Runtime ─────────────────────────────────
-FROM oven/bun:1-alpine
+FROM oven/bun:1.3.11-alpine
 
 RUN apk add --no-cache curl \
     && addgroup -S app && adduser -S app -G app

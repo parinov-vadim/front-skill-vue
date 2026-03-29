@@ -1,22 +1,3 @@
-import { readdirSync } from 'node:fs'
-import { join } from 'node:path'
-
-function getDocsRoutes(): string[] {
-  const docsDir = join(import.meta.dirname, 'content/docs')
-  const routes: string[] = ['/docs']
-
-  for (const section of readdirSync(docsDir, { withFileTypes: true })) {
-    if (!section.isDirectory()) continue
-    routes.push(`/docs/${section.name}`)
-    for (const file of readdirSync(join(docsDir, section.name), { withFileTypes: true })) {
-      if (!file.isFile() || !file.name.endsWith('.md')) continue
-      routes.push(`/docs/${section.name}/${file.name.replace('.md', '')}`)
-    }
-  }
-
-  return routes
-}
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -44,6 +25,9 @@ export default defineNuxtConfig({
         },
       },
     },
+  },
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
   },
   robots: {
     disallow: ['/admin'],
