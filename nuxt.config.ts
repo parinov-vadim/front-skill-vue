@@ -46,10 +46,13 @@ export default defineNuxtConfig({
     },
   },
   sitemap: {
-    sources: ['/_sitemap/urls'],
+    urls: getDocsRoutes(),
   },
   robots: {
     disallow: ['/admin'],
+  },
+  icon: {
+    localApiEndpoint: '/_nuxt_icon',
   },
   linkChecker: {
     enabled: false,
