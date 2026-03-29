@@ -1,8 +1,9 @@
 # ── Stage 1: Build ────────────────────────────────────
-FROM oven/bun:1-alpine AS builder
+FROM node:22-alpine AS builder
 
-# Зависимости для компиляции нативных модулей (better-sqlite3)
-RUN apk add --no-cache python3 make g++
+# Bun для установки зависимостей + python/make/g++ для нативных модулей
+RUN apk add --no-cache python3 make g++ \
+    && npm i -g bun
 
 WORKDIR /app
 
@@ -11,7 +12,7 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY . .
-RUN bun run build
+RUN npx nuxi build
 
 # ── Stage 2: Runtime ─────────────────────────────────
 FROM node:22-alpine
