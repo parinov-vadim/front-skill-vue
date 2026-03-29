@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     },
   },
   sitemap: {
-    sources: ['/api/__sitemap__/urls'],
+    sources: ['/_sitemap/urls'],
   },
   robots: {
     disallow: ['/admin'],
