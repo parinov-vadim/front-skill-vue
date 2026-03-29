@@ -1,6 +1,9 @@
 # ── Stage 1: Build ────────────────────────────────────
 FROM oven/bun:1-alpine AS builder
 
+# Зависимости для компиляции нативных модулей (better-sqlite3)
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
 
 # Кэшируем зависимости отдельным слоем
