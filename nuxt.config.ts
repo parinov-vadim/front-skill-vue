@@ -45,9 +45,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  sitemap: {
-    urls: getDocsRoutes(),
-  },
   robots: {
     disallow: ['/admin'],
   },
