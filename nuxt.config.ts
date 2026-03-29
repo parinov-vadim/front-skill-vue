@@ -61,7 +61,7 @@ export default defineNuxtConfig({
     '/docs/**': { prerender: true },
   },
   nitro: {
-    preset: 'bun',
+    preset: 'node-server',
     prerender: {
       crawlLinks: false,
       routes: getDocsRoutes(),

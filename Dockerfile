@@ -14,10 +14,11 @@ COPY . .
 RUN bun run build
 
 # ── Stage 2: Runtime ─────────────────────────────────
-FROM oven/bun:1-alpine
+FROM node:22-alpine
 
 RUN apk add --no-cache curl \
     && addgroup -S app && adduser -S app -G app
+
 WORKDIR /app
 
 # Nuxt output — Nitro сервер + public assets
@@ -35,4 +36,4 @@ ENV NODE_ENV=production
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
 
-ENTRYPOINT ["bun", ".output/server/index.mjs"]
+ENTRYPOINT ["node", ".output/server/index.mjs"]
