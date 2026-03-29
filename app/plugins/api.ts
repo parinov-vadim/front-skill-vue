@@ -51,7 +51,7 @@ export default defineNuxtPlugin(async () => {
   // lose Nuxt async context after await in the plugin
   const user = useState<User | null>('auth:user', () => null)
 
-  if (accessToken.value && !user.value) {
+  if (accessToken.value && !user.value && config.public.baseTarget) {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${accessToken.value}`,
     }
