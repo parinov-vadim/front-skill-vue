@@ -10,7 +10,7 @@ const sectionMeta = computed(() => getSectionMeta(sectionId.value))
 
 // ─── Topics ───────────────────────────────────────────────────────────
 const { data: topics } = await useAsyncData(`docs-section-${sectionId.value}`, () =>
-  queryCollection('docs').all()
+  queryCollection('docs').select('path', 'title', 'description', 'order', 'difficulty', 'readTime').all()
 )
 
 const sectionTopics = computed(() =>

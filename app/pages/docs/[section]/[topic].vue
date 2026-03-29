@@ -20,7 +20,7 @@ if (!page.value) {
 
 // ─── Prev/Next navigation ─────────────────────────────────────────────
 const { data: allSectionTopics } = await useAsyncData(`docs-nav-${sectionId.value}`, () =>
-  queryCollection('docs').all()
+  queryCollection('docs').select('path', 'title', 'order').all()
 )
 
 const sectionTopics = computed(() =>

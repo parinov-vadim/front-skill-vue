@@ -9,7 +9,7 @@ useSeoMeta({
 
 // ─── Stats per section ────────────────────────────────────────────────
 const { data: allPages } = await useAsyncData('docs-all', () =>
-  queryCollection('docs').all()
+  queryCollection('docs').select('path').all()
 )
 
 const sections = computed(() =>

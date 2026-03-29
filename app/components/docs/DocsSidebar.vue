@@ -14,7 +14,7 @@ const route = useRoute()
 
 // Fetch all docs for navigation (metadata only via queryCollectionNavigation)
 const { data: allPages } = await useAsyncData('docs-nav', () =>
-  queryCollection('docs').all()
+  queryCollection('docs').select('path', 'title', 'order').all()
 )
 
 const sections = computed(() => {
