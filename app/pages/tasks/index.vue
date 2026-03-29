@@ -1,52 +1,20 @@
 <script setup lang="ts">
+import type { Difficulty, Task, TaskListResponse } from '~/types/task'
+
 useHead({ title: 'Задачи — FrontSkill' })
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type Difficulty = 'easy' | 'medium' | 'hard' | 'expert'
 type Status = 'all' | 'solved' | 'attempted' | 'unsolved'
 type SortKey = 'popular' | 'newest' | 'acceptance-desc' | 'acceptance-asc' | 'difficulty-asc' | 'difficulty-desc'
 
-interface Task {
-  id: number
-  title: string
-  description: string
-  difficulty: Difficulty
-  categories: string[]
-  tags: string[]
-  solved: boolean
-  attempted: boolean
-  acceptance: number
-  solutions: number
-}
+// ─── Data fetching ───────────────────────────────────────────────────────────
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
+const config = useRuntimeConfig()
 
-const allTasks: Task[] = [
-  { id: 1,  title: 'Центрирование элемента',         description: 'Расположите div по центру родителя тремя разными способами: Flexbox, Grid и абсолютным позиционированием.',           difficulty: 'easy',   categories: ['css'],        tags: ['CSS', 'Flexbox'],          solved: true,  attempted: false, acceptance: 81, solutions: 9320 },
-  { id: 2,  title: 'Sticky footer',                  description: 'Реализуйте прижатый к низу страницы footer, который не перекрывает контент при малом количестве содержимого.',         difficulty: 'easy',   categories: ['css'],        tags: ['CSS', 'Flexbox'],          solved: true,  attempted: false, acceptance: 76, solutions: 7840 },
-  { id: 3,  title: 'Адаптивная сетка карточек',      description: 'Создайте сетку карточек, которая перестраивается с 3 до 1 колонки при уменьшении экрана без медиазапросов.',           difficulty: 'easy',   categories: ['css'],        tags: ['CSS', 'Grid'],             solved: false, attempted: false, acceptance: 73, solutions: 6510 },
-  { id: 4,  title: 'CSS-переменные для тем',         description: 'Реализуйте переключение светлой и тёмной темы с помощью CSS-переменных и атрибута data-theme.',                       difficulty: 'easy',   categories: ['css'],        tags: ['CSS', 'Design System'],    solved: false, attempted: true,  acceptance: 69, solutions: 5230 },
-  { id: 5,  title: 'Кнопка с состояниями',           description: 'Создайте кнопку с состояниями: default, hover, active, disabled и loading. Только HTML и CSS.',                       difficulty: 'easy',   categories: ['css', 'html'], tags: ['CSS', 'HTML'],             solved: false, attempted: false, acceptance: 84, solutions: 11200 },
-  { id: 6,  title: 'Всплывающая подсказка',          description: 'Реализуйте tooltip, появляющийся при hover над элементом, с поддержкой четырёх направлений.',                         difficulty: 'easy',   categories: ['css'],        tags: ['CSS'],                     solved: false, attempted: false, acceptance: 65, solutions: 4800 },
-  { id: 7,  title: 'Debounce с нуля',                description: 'Реализуйте функцию debounce без библиотек. Примените к полю поиска с задержкой 300мс.',                               difficulty: 'medium', categories: ['js'],         tags: ['JavaScript'],              solved: false, attempted: true,  acceptance: 58, solutions: 5140 },
-  { id: 8,  title: 'Бесконечная прокрутка',          description: 'Реализуйте компонент с подгрузкой данных при достижении конца списка через IntersectionObserver.',                     difficulty: 'medium', categories: ['js', 'vue'],  tags: ['JavaScript', 'Vue'],       solved: false, attempted: false, acceptance: 52, solutions: 4320 },
-  { id: 9,  title: 'Drag and Drop список',           description: 'Напишите сортируемый список перетаскиванием элементов. Используйте только нативный Drag and Drop API.',                difficulty: 'medium', categories: ['js'],         tags: ['JavaScript', 'DOM'],       solved: false, attempted: false, acceptance: 44, solutions: 3100 },
-  { id: 10, title: 'Кастомный Select',               description: 'Замените нативный <select> на кастомный компонент с поиском, мультивыбором и поддержкой клавиатуры.',                  difficulty: 'medium', categories: ['js', 'css'],  tags: ['JavaScript', 'CSS', 'A11y'], solved: false, attempted: false, acceptance: 41, solutions: 2870 },
-  { id: 11, title: 'Аккордеон без библиотек',        description: 'Реализуйте компонент аккордеона с анимацией раскрытия. Один открытый раздел одновременно.',                            difficulty: 'medium', categories: ['js', 'css'],  tags: ['JavaScript', 'CSS'],       solved: false, attempted: false, acceptance: 63, solutions: 4660 },
-  { id: 12, title: 'TypeScript дженерики',           description: 'Напишите типизированные утилитарные функции: groupBy, pick, omit. Без any, с полным выводом типов.',                   difficulty: 'medium', categories: ['ts'],         tags: ['TypeScript'],              solved: false, attempted: true,  acceptance: 47, solutions: 3540 },
-  { id: 13, title: 'Vue реактивная форма',           description: 'Создайте форму с валидацией в реальном времени: email, пароль, совпадение паролей. Без сторонних библиотек.',           difficulty: 'medium', categories: ['vue'],        tags: ['Vue', 'TypeScript'],       solved: false, attempted: false, acceptance: 55, solutions: 4010 },
-  { id: 14, title: 'React хук useLocalStorage',      description: 'Напишите хук, синхронизирующий состояние с localStorage и реагирующий на изменения в других вкладках.',               difficulty: 'medium', categories: ['react', 'ts'], tags: ['React', 'TypeScript'],     solved: false, attempted: false, acceptance: 61, solutions: 4450 },
-  { id: 15, title: 'Анимация CSS-счётчика',          description: 'Реализуйте анимированное число, считающее от 0 до целевого значения при появлении в зоне видимости.',                  difficulty: 'medium', categories: ['css', 'js'],  tags: ['CSS', 'JavaScript'],       solved: false, attempted: false, acceptance: 57, solutions: 4180 },
-  { id: 16, title: 'Виртуальный список',             description: 'Реализуйте виртуализацию списка из 100 000 элементов без потери производительности. Только DOM API.',                  difficulty: 'hard',   categories: ['js', 'vue'],  tags: ['JavaScript', 'Vue', 'Производительность'], solved: false, attempted: false, acceptance: 31, solutions: 2040 },
-  { id: 17, title: 'Реактивный стейт-менеджер',      description: 'Создайте минималистичный менеджер состояния с подписками, computed-значениями и batch-обновлениями.',                  difficulty: 'hard',   categories: ['ts', 'vue'],  tags: ['TypeScript', 'Vue'],       solved: false, attempted: false, acceptance: 24, solutions: 1870 },
-  { id: 18, title: 'Анимация SVG-пути',              description: 'Анимируйте обводку SVG-пути: эффект "рисования линии" при скролле, синхронизированный с прогрессом.',                  difficulty: 'hard',   categories: ['css', 'svg'], tags: ['CSS', 'SVG'],              solved: false, attempted: false, acceptance: 36, solutions: 2390 },
-  { id: 19, title: 'Оптимизация React renders',      description: 'Профилируйте и оптимизируйте компонент с лишними ре-рендерами: useMemo, useCallback, React.memo.',                      difficulty: 'hard',   categories: ['react', 'ts'], tags: ['React', 'TypeScript'],    solved: false, attempted: true,  acceptance: 29, solutions: 1960 },
-  { id: 20, title: 'WCAG-доступная модалка',         description: 'Реализуйте доступный диалог: focus trap, aria-атрибуты, закрытие по Escape, возврат фокуса.',                          difficulty: 'hard',   categories: ['js', 'a11y'], tags: ['JavaScript', 'A11y'],      solved: false, attempted: false, acceptance: 33, solutions: 2110 },
-  { id: 21, title: 'Виртуальный DOM с нуля',         description: 'Напишите минималистичную реализацию виртуального DOM: vnode, diff-алгоритм, патчинг реального DOM.',                   difficulty: 'expert', categories: ['js', 'ts'],   tags: ['JavaScript', 'TypeScript'], solved: false, attempted: false, acceptance: 18, solutions: 980 },
-  { id: 22, title: 'CSS-парсер',                     description: 'Напишите парсер CSS, который строит AST из строки стилей. Поддержите селекторы, свойства и медиазапросы.',             difficulty: 'expert', categories: ['ts'],         tags: ['TypeScript', 'Compiler'],  solved: false, attempted: false, acceptance: 12, solutions: 540 },
-  { id: 23, title: 'Компилятор шаблонов',            description: 'Реализуйте компилятор шаблонов Vue-подобного синтаксиса: парсинг, AST, генерация кода render-функции.',                difficulty: 'expert', categories: ['ts', 'vue'],  tags: ['TypeScript', 'Vue'],       solved: false, attempted: false, acceptance: 9,  solutions: 320  },
-]
+const { data, status, error, refresh } = await useFetch<TaskListResponse>(`${config.public.baseTarget}/api/tasks`)
+
+const allTasks = computed(() => data.value?.tasks ?? [])
 
 // ─── Category definitions ─────────────────────────────────────────────────────
 
@@ -98,7 +66,7 @@ const mobileFiltersOpen = ref(false)
 const difficultyOrder: Record<Difficulty, number> = { easy: 0, medium: 1, hard: 2, expert: 3 }
 
 const filteredTasks = computed(() => {
-  let result = allTasks
+  let result = allTasks.value
 
   if (search.value.trim()) {
     const q = search.value.toLowerCase()
@@ -444,12 +412,30 @@ function getCategoryDef(id: string) {
           />
         </div>
 
+        <!-- Loading state -->
+        <div v-if="status === 'pending'" class="flex flex-col items-center justify-center py-20 text-center">
+          <UIcon name="i-lucide-loader-2" class="size-8 text-violet-500 animate-spin mb-4" />
+          <p class="text-sm text-zinc-500 dark:text-zinc-400">Загрузка задач...</p>
+        </div>
+
+        <!-- Error state -->
+        <div v-else-if="error" class="flex flex-col items-center justify-center py-20 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-950/30 flex items-center justify-center mb-4">
+            <UIcon name="i-lucide-alert-triangle" class="size-7 text-red-500" />
+          </div>
+          <p class="font-semibold mb-1">Не удалось загрузить задачи</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-5 max-w-xs">
+            {{ error.message }}
+          </p>
+          <UButton label="Попробовать снова" variant="outline" color="neutral" @click="refresh()" />
+        </div>
+
         <!-- Task list -->
-        <div v-if="filteredTasks.length" class="space-y-2">
+        <div v-else-if="filteredTasks.length" class="space-y-2">
           <NuxtLink
             v-for="task in filteredTasks"
             :key="task.id"
-            :to="`/tasks/${task.id}`"
+            :to="`/tasks/${task.slug}`"
             class="group flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-violet-200 dark:hover:border-violet-800/60 hover:shadow-sm transition-all block"
           >
             <!-- Status dot -->

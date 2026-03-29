@@ -1,8 +1,14 @@
 <script setup lang="ts">
 const route = useRoute()
 const mobileMenuOpen = ref(false)
+const { user, isLoggedIn, logout } = useAuth()
 
 watch(() => route.path, () => { mobileMenuOpen.value = false })
+
+async function handleLogout() {
+  await logout()
+  await navigateTo('/')
+}
 
 const navLinks = [
   { label: 'Задачи', to: '/tasks' },
@@ -48,21 +54,43 @@ const navLinks = [
         <div class="flex items-center gap-1 shrink-0">
           <UColorModeButton size="sm" variant="ghost" color="neutral" />
 
-          <UButton
-            to="/auth/login"
-            label="Войти"
-            variant="ghost"
-            color="neutral"
-            size="sm"
-            class="hidden sm:flex"
-          />
-          <UButton
-            to="/auth/register"
-            label="Регистрация"
-            color="primary"
-            size="sm"
-            class="hidden sm:flex"
-          />
+          <template v-if="isLoggedIn">
+            <UButton
+              :to="`/users/${user?.username}`"
+              :label="user?.username"
+              variant="ghost"
+              color="neutral"
+              size="sm"
+              icon="i-lucide-user"
+              class="hidden sm:flex"
+            />
+            <UButton
+              label="Выйти"
+              variant="ghost"
+              color="neutral"
+              size="sm"
+              icon="i-lucide-log-out"
+              class="hidden sm:flex"
+              @click="handleLogout"
+            />
+          </template>
+          <template v-else>
+            <UButton
+              to="/auth/login"
+              label="Войти"
+              variant="ghost"
+              color="neutral"
+              size="sm"
+              class="hidden sm:flex"
+            />
+            <UButton
+              to="/auth/register"
+              label="Регистрация"
+              color="primary"
+              size="sm"
+              class="hidden sm:flex"
+            />
+          </template>
 
           <!-- Mobile hamburger -->
           <UButton
@@ -105,8 +133,14 @@ const navLinks = [
           </NuxtLink>
         </nav>
         <div class="px-4 pt-2 pb-4 border-t border-zinc-100 dark:border-zinc-800/60 flex gap-2">
-          <UButton to="/auth/login" label="Войти" variant="outline" color="neutral" class="flex-1 justify-center" />
-          <UButton to="/auth/register" label="Регистрация" color="primary" class="flex-1 justify-center" />
+          <template v-if="isLoggedIn">
+            <UButton :to="`/users/${user?.username}`" :label="user?.username" icon="i-lucide-user" variant="outline" color="neutral" class="flex-1 justify-center" />
+            <UButton label="Выйти" icon="i-lucide-log-out" variant="outline" color="neutral" class="flex-1 justify-center" @click="handleLogout" />
+          </template>
+          <template v-else>
+            <UButton to="/auth/login" label="Войти" variant="outline" color="neutral" class="flex-1 justify-center" />
+            <UButton to="/auth/register" label="Регистрация" color="primary" class="flex-1 justify-center" />
+          </template>
         </div>
       </div>
     </Transition>

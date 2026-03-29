@@ -1,20 +1,65 @@
 <script setup lang="ts">
+import * as z from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
+
 definePageMeta({ layout: 'auth' })
 
-const state = reactive({
-  username: '',
-  email: '',
-  password: '',
+const { $api } = useNuxtApp()
+const toast = useToast()
+
+const schema = z.object({
+  username: z.string()
+    .min(3, 'Минимум 3 символа')
+    .max(40, 'Максимум 40 символов')
+    .regex(/^[a-zA-Z0-9_]+$/, 'Только латиница, цифры и _'),
+  email: z.email('Некорректный email'),
+  password: z.string()
+    .min(8, 'Минимум 8 символов'),
+  agree: z.literal(true, { error: 'Необходимо принять условия' }),
+})
+
+type Schema = z.output<typeof schema>
+
+const state = reactive<Partial<Schema>>({
+  username: undefined,
+  email: undefined,
+  password: undefined,
   agree: false,
 })
 
 const loading = ref(false)
 
-async function onSubmit() {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true
-  // TODO: implement auth
-  await new Promise(r => setTimeout(r, 800))
-  loading.value = false
+  try {
+    await ($api as typeof $fetch)('/api/auth/register', {
+      method: 'POST',
+      body: {
+        username: event.data.username,
+        email: event.data.email,
+        password: event.data.password,
+      },
+    })
+    toast.add({
+      title: 'Регистрация успешна',
+      description: 'Теперь вы можете войти в аккаунт',
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+    })
+    await navigateTo('/auth/login')
+  }
+  catch (err: any) {
+    const message = err?.data?.error || err?.error || 'Попробуйте позже'
+    toast.add({
+      title: 'Ошибка регистрации',
+      description: message,
+      color: 'error',
+      icon: 'i-lucide-alert-circle',
+    })
+  }
+  finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -31,7 +76,7 @@ async function onSubmit() {
     </div>
 
     <UCard class="shadow-xl shadow-zinc-200/50 dark:shadow-zinc-950/50">
-      <form class="space-y-4" @submit.prevent="onSubmit">
+      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Имя пользователя" name="username">
           <UInput
             v-model="state.username"
@@ -64,14 +109,16 @@ async function onSubmit() {
           />
         </UFormField>
 
-        <UCheckbox v-model="state.agree">
-          <template #label>
-            <span class="text-sm text-zinc-500 dark:text-zinc-400">
-              Принимаю
-              <NuxtLink to="/terms" class="text-violet-600 dark:text-violet-400 hover:underline">условия использования</NuxtLink>
-            </span>
-          </template>
-        </UCheckbox>
+        <UFormField name="agree">
+          <UCheckbox v-model="state.agree">
+            <template #label>
+              <span class="text-sm text-zinc-500 dark:text-zinc-400">
+                Принимаю
+                <NuxtLink to="/terms" class="text-violet-600 dark:text-violet-400 hover:underline">условия использования</NuxtLink>
+              </span>
+            </template>
+          </UCheckbox>
+        </UFormField>
 
         <UButton
           type="submit"
@@ -79,9 +126,8 @@ async function onSubmit() {
           color="primary"
           class="w-full justify-center"
           :loading="loading"
-          :disabled="!state.agree"
         />
-      </form>
+      </UForm>
 
       <UDivider label="или" class="my-4" />
 

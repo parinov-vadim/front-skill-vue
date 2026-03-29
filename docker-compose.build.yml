@@ -1,0 +1,12 @@
+# Только для сборки и пуша образов в registry
+# Использование:
+#   docker compose -f docker-compose.build.yml build
+#   docker compose -f docker-compose.build.yml push
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cr.selcloud.ru/frontend/nuxt:latest
+    platform: linux/amd64

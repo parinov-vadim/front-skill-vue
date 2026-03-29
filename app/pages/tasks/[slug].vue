@@ -1,36 +1,11 @@
 <script setup lang="ts">
+import type { Difficulty, TaskDetail } from '~/types/task'
+
 definePageMeta({ layout: 'task' })
 
 const route = useRoute()
-const taskId = Number(route.params.id)
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-type Difficulty = 'easy' | 'medium' | 'hard' | 'expert'
-
-interface TestCase {
-  id: number
-  input: string
-  expectedOutput: string
-  explanation?: string
-}
-
-interface TaskDetail {
-  id: number
-  title: string
-  difficulty: Difficulty
-  categories: string[]
-  tags: string[]
-  acceptance: number
-  solutions: number
-  description: string
-  requirements: string[]
-  details: string
-  constraints: string[]
-  examples: TestCase[]
-  starterCode: string
-  language: string
-}
+const slug = route.params.slug as string
+const config = useRuntimeConfig()
 
 // ─── Definitions ─────────────────────────────────────────────────────────────
 
@@ -52,83 +27,28 @@ const difficultyDefs: Record<Difficulty, { label: string; cls: string }> = {
   expert: { label: 'Эксперт', cls: 'badge-expert' },
 }
 
-// ─── Mock data ───────────────────────────────────────────────────────────────
+// ─── Data fetching ──────────────────────────────────────────────────────────
 
-const tasksDb: Record<number, TaskDetail> = {
-  1: {
-    id: 1,
-    title: 'Центрирование элемента',
-    difficulty: 'easy',
-    categories: ['css'],
-    tags: ['Flexbox', 'Grid', 'Positioning'],
-    acceptance: 81,
-    solutions: 9320,
-    description: 'Расположите элемент .child точно по центру родительского контейнера .parent тремя разными способами.',
-    requirements: [
-      'Flexbox — используйте свойства Flexbox для центрирования',
-      'Grid — используйте CSS Grid для центрирования',
-      'Абсолютное позиционирование — используйте position и transform',
-    ],
-    details: 'Родительский контейнер имеет фиксированные размеры 300\u00d7200px и видимую границу. Дочерний элемент — 100\u00d7100px с фоновым цветом.',
-    constraints: [
-      'Используйте только CSS (без JavaScript)',
-      'Каждый способ должен работать независимо',
-      'Элемент должен быть центрирован и вертикально, и горизонтально',
-      'Решение должно работать при изменении размера контейнера',
-    ],
-    examples: [
-      {
-        id: 1,
-        input: '.parent-flex { width: 300px; height: 200px; }\n.child { width: 100px; height: 100px; }',
-        expectedOutput: 'Дочерний элемент центрирован с помощью Flexbox',
-        explanation: 'Используйте display: flex, justify-content: center и align-items: center на родителе.',
-      },
-      {
-        id: 2,
-        input: '.parent-grid { width: 300px; height: 200px; }\n.child { width: 100px; height: 100px; }',
-        expectedOutput: 'Дочерний элемент центрирован с помощью Grid',
-        explanation: 'Используйте display: grid и place-items: center на родителе.',
-      },
-      {
-        id: 3,
-        input: '.parent-abs { width: 300px; height: 200px; position: relative; }\n.child { width: 100px; height: 100px; }',
-        expectedOutput: 'Дочерний элемент центрирован абсолютным позиционированием',
-        explanation: 'Используйте position: absolute, top: 50%, left: 50% и transform: translate(-50%, -50%) на дочернем элементе.',
-      },
-    ],
-    starterCode: `/* Способ 1: Flexbox */
-.parent-flex {
+const { data: task, status, error } = await useFetch<TaskDetail>(`${config.public.baseTarget}/api/tasks/${slug}`)
 
-}
-
-/* Способ 2: Grid */
-.parent-grid {
-
-}
-
-/* Способ 3: Absolute positioning */
-.parent-abs {
-  position: relative;
-}
-.child-abs {
-
-}`,
-    language: 'css',
-  },
-}
-
-const task = tasksDb[taskId]
-
-useHead({ title: task ? `${task.title} — FrontSkill` : 'Задача не найдена — FrontSkill' })
+useHead({ title: computed(() => task.value ? `${task.value.title} — FrontSkill` : 'Задача не найдена — FrontSkill') })
 
 // ─── State ───────────────────────────────────────────────────────────────────
 
-const code = ref(task?.starterCode ?? '')
-const selectedLanguage = ref(task?.language ?? 'css')
+const code = ref(task.value?.starterCode ?? '')
+const selectedLanguage = ref(task.value?.language ?? 'css')
 const mobileTab = ref<'task' | 'code' | 'tests'>('task')
 const bottomTab = ref<'cases' | 'result'>('cases')
-const testResult = ref<null | { passed: boolean; details: string[] }>(null)
-const isRunning = ref(false)
+
+const {
+  status: submissionStatus,
+  result: testResult,
+  isRunning,
+  error: submissionError,
+  runTests: doRunTests,
+  submitSolution: doSubmitSolution,
+  reset: resetSubmission,
+} = useSubmission()
 
 const languages = [
   { value: 'css', label: 'CSS' },
@@ -137,73 +57,49 @@ const languages = [
   { value: 'typescript', label: 'TypeScript' },
 ]
 
+// ─── Status label mapping ────────────────────────────────────────────────────
+
+const statusLabels: Record<string, string> = {
+  pending: 'В очереди...',
+  running: 'Выполняется...',
+  passed: 'Все тесты пройдены!',
+  failed: 'Некоторые тесты не пройдены',
+  error: 'Ошибка выполнения',
+  timeout: 'Превышено время выполнения',
+}
+
 function resetCode() {
-  code.value = task?.starterCode ?? ''
-  testResult.value = null
+  code.value = task.value?.starterCode ?? ''
+  resetSubmission()
 }
 
 async function runTests() {
-  isRunning.value = true
-  testResult.value = null
-
-  await new Promise(resolve => setTimeout(resolve, 1000))
-
-  const hasContent = code.value.trim() !== (task?.starterCode ?? '').trim()
-
-  if (hasContent) {
-    testResult.value = {
-      passed: false,
-      details: [
-        '\u2713 Тест 1: Flexbox центрирование — пройден',
-        '\u2717 Тест 2: Grid центрирование — ожидалось place-items: center',
-        '\u2717 Тест 3: Абсолютное позиционирование — элемент не центрирован',
-      ],
-    }
-  }
-  else {
-    testResult.value = {
-      passed: false,
-      details: [
-        '\u2717 Тест 1: Flexbox — стили не применены',
-        '\u2717 Тест 2: Grid — стили не применены',
-        '\u2717 Тест 3: Абсолютное позиционирование — стили не применены',
-      ],
-    }
-  }
-
+  if (!task.value) return
   bottomTab.value = 'result'
-  isRunning.value = false
+  await doRunTests(slug, code.value, selectedLanguage.value)
 }
 
 async function submitSolution() {
-  isRunning.value = true
-  testResult.value = null
-
-  await new Promise(resolve => setTimeout(resolve, 1500))
-
-  testResult.value = {
-    passed: true,
-    details: [
-      '\u2713 Тест 1: Flexbox центрирование — пройден',
-      '\u2713 Тест 2: Grid центрирование — пройден',
-      '\u2713 Тест 3: Абсолютное позиционирование — пройден',
-      '\u2713 Все скрытые тесты пройдены (5/5)',
-    ],
-  }
-
+  if (!task.value) return
   bottomTab.value = 'result'
-  isRunning.value = false
+  await doSubmitSolution(slug, code.value, selectedLanguage.value)
 }
 </script>
 
 <template>
-  <!-- Not found -->
-  <div v-if="!task" class="flex flex-col items-center justify-center h-full text-center p-8">
+  <!-- Loading -->
+  <div v-if="status === 'pending'" class="flex flex-col items-center justify-center h-full text-center p-8">
+    <UIcon name="i-lucide-loader-2" class="size-8 text-violet-500 animate-spin mb-4" />
+    <p class="text-sm text-zinc-500 dark:text-zinc-400">Загрузка задачи...</p>
+  </div>
+
+  <!-- Error / Not found -->
+  <div v-else-if="error || !task" class="flex flex-col items-center justify-center h-full text-center p-8">
     <div class="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
       <UIcon name="i-lucide-file-question" class="size-7 text-zinc-400" />
     </div>
     <p class="font-semibold mb-1">Задача не найдена</p>
-    <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-5">Задачи с ID {{ taskId }} не существует</p>
+    <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-5">{{ error?.message ?? `Задачи «${slug}» не существует` }}</p>
     <UButton to="/tasks" label="К списку задач" variant="outline" color="neutral" />
   </div>
 
@@ -431,8 +327,13 @@ async function submitSolution() {
               @click="bottomTab = 'result'"
             >
               Результат
+              <UIcon
+                v-if="submissionStatus === 'pending' || submissionStatus === 'running'"
+                name="i-lucide-loader-2"
+                class="size-3 text-violet-500 animate-spin"
+              />
               <span
-                v-if="testResult"
+                v-else-if="testResult"
                 class="w-2 h-2 rounded-full"
                 :class="testResult.passed ? 'bg-green-500' : 'bg-red-500'"
               />
@@ -464,19 +365,45 @@ async function submitSolution() {
 
             <!-- Results -->
             <div v-else-if="bottomTab === 'result'">
-              <div v-if="!testResult" class="flex flex-col items-center justify-center py-8 text-center">
+              <!-- Empty state -->
+              <div v-if="!submissionStatus && !testResult && !submissionError" class="flex flex-col items-center justify-center py-8 text-center">
                 <UIcon name="i-lucide-play" class="size-8 text-zinc-300 dark:text-zinc-600 mb-2" />
                 <p class="text-sm text-zinc-400">Запустите тесты, чтобы увидеть результат</p>
               </div>
-              <div v-else>
+
+              <!-- Error -->
+              <div v-else-if="submissionError" class="flex flex-col items-center justify-center py-8 text-center">
+                <UIcon name="i-lucide-alert-triangle" class="size-8 text-red-400 mb-2" />
+                <p class="text-sm text-red-500 dark:text-red-400">{{ submissionError }}</p>
+              </div>
+
+              <!-- Pending / Running -->
+              <div v-else-if="submissionStatus === 'pending' || submissionStatus === 'running'" class="flex flex-col items-center justify-center py-8 text-center">
+                <UIcon name="i-lucide-loader-2" class="size-8 text-violet-500 animate-spin mb-3" />
+                <p class="text-sm font-medium text-zinc-600 dark:text-zinc-300">{{ statusLabels[submissionStatus] }}</p>
+              </div>
+
+              <!-- Completed result -->
+              <div v-else-if="testResult">
+                <!-- Status banner -->
                 <div
                   class="mb-3 px-3 py-2 rounded-lg text-sm font-medium"
                   :class="testResult.passed
                     ? 'bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400'
-                    : 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400'"
+                    : submissionStatus === 'timeout'
+                      ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400'
+                      : 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400'"
                 >
-                  {{ testResult.passed ? 'Все тесты пройдены!' : 'Некоторые тесты не пройдены' }}
+                  {{ statusLabels[submissionStatus!] }}
                 </div>
+
+                <!-- Stats -->
+                <div class="flex items-center gap-4 mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+                  <span>{{ testResult.passedTests }}/{{ testResult.totalTests }} тестов</span>
+                  <span v-if="testResult.execTime">{{ testResult.execTime }} мс</span>
+                </div>
+
+                <!-- Test details -->
                 <div class="space-y-1">
                   <p
                     v-for="(detail, i) in testResult.details"
