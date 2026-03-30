@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: 'О проекте FrontSkill — Бесплатная платформа для практики фронтенд-разработки',
+  title: 'О проекте — FrontSkill',
   meta: [
     {
       name: 'description',

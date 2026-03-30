@@ -230,7 +230,7 @@ const socials = [
           </div>
 
           <!-- Link columns — on mobile они идут в 3 равные колонки -->
-          <div class="grid grid-cols-3 sm:contents gap-6 sm:gap-0">
+          <div class="grid grid-cols-2 gap-6 sm:contents">
             <div v-for="col in footerLinks" :key="col.title">
               <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-3">{{ col.title }}</p>
               <ul class="space-y-2">

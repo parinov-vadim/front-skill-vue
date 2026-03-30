@@ -102,15 +102,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         />
       </UForm>
 
-      <UDivider label="или" class="my-4" />
-
-      <UButton
-        label="Войти через GitHub"
-        icon="i-simple-icons-github"
-        variant="outline"
-        color="neutral"
-        class="w-full justify-center"
-      />
     </UCard>
   </div>
 </template>

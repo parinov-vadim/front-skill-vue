@@ -45,7 +45,7 @@ const nextTopic = computed(() =>
 
 // ─── SEO ──────────────────────────────────────────────────────────────
 useSeoMeta({
-  title: `${page.value?.title} — ${sectionMeta.value?.label} — FrontSkill`,
+  title: `${page.value?.title} — FrontSkill`,
   description: page.value?.description as string,
 })
 

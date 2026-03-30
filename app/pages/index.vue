@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: 'FrontSkill — Задачи по фронтенд-разработке | HTML, CSS, JavaScript, Vue, React',
+  title: 'FrontSkill — Задачи по фронтенд-разработке',
   meta: [
     {
       name: 'description',

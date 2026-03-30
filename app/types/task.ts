@@ -6,6 +6,7 @@ export interface Task {
   title: string
   description: string
   difficulty: Difficulty
+  language: string
   categories: string[]
   tags: string[]
   solved: boolean

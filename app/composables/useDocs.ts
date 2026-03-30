@@ -66,6 +66,46 @@ export const DOCS_SECTIONS: DocsSection[] = [
     iconColor: 'text-violet-500',
     tagColor: 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300',
   },
+  {
+    id: 'typescript',
+    label: 'TypeScript',
+    icon: 'i-lucide-shield-check',
+    description: 'Типы, дженерики, утилиты и типизация фреймворков',
+    iconColor: 'text-blue-600',
+    tagColor: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+  },
+  {
+    id: 'tools',
+    label: 'Инструменты',
+    icon: 'i-lucide-wrench',
+    description: 'Сборка, линтинг, DevTools, дизайн и контейнеризация',
+    iconColor: 'text-slate-500',
+    tagColor: 'bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-300',
+  },
+  {
+    id: 'web-fundamentals',
+    label: 'Основы веба',
+    icon: 'i-lucide-globe',
+    description: 'HTTP, REST, безопасность, производительность и SEO',
+    iconColor: 'text-teal-500',
+    tagColor: 'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300',
+  },
+  {
+    id: 'algorithms',
+    label: 'Алгоритмы',
+    icon: 'i-lucide-brain',
+    description: 'Структуры данных, сортировки, графы и динамическое программирование',
+    iconColor: 'text-pink-500',
+    tagColor: 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300',
+  },
+  {
+    id: 'career',
+    label: 'Карьера',
+    icon: 'i-lucide-briefcase',
+    description: 'Дорожная карта, собеседования, резюме и зарплаты',
+    iconColor: 'text-amber-500',
+    tagColor: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
+  },
 ]
 
 // ─── Docs nav composable ───────────────────────────────────────────────

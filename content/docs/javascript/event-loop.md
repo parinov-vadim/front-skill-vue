@@ -4,7 +4,7 @@ description: Как JavaScript выполняет код и обрабатыва
 section: javascript
 difficulty: intermediate
 readTime: 10
-order: 2
+order: 3
 tags: [event loop, async, microtasks, macrotasks]
 ---
 

@@ -4,7 +4,7 @@ description: JavaScript использует прототипное наслед
 section: javascript
 difficulty: intermediate
 readTime: 9
-order: 5
+order: 6
 tags: [prototype, inheritance, class, OOP]
 ---
 

@@ -17,7 +17,11 @@ export function useAuth() {
       body: { email, password },
     })
     accessToken.value = data.accessToken
-    await fetchUser()
+    // Pass token explicitly — useCookie in the plugin interceptor
+    // may not yet reflect the updated value on the same tick
+    user.value = await ($api as typeof $fetch)<User>('/api/auth/me', {
+      headers: { Authorization: `Bearer ${data.accessToken}` },
+    })
   }
 
   async function refresh(): Promise<boolean> {

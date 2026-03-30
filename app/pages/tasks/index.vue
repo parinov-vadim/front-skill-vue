@@ -1,39 +1,33 @@
 <script setup lang="ts">
-import type { Difficulty, Task, TaskListResponse } from '~/types/task'
+import type { TaskListResponse } from '~/types/task'
 
 useHead({ title: 'Задачи — FrontSkill' })
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type Status = 'all' | 'solved' | 'attempted' | 'unsolved'
-type SortKey = 'popular' | 'newest' | 'acceptance-desc' | 'acceptance-asc' | 'difficulty-asc' | 'difficulty-desc'
+type SortKey = 'newest' | 'popularity' | 'acceptance' | 'easy_first' | 'hard_first'
 
-// ─── Data fetching ───────────────────────────────────────────────────────────
+// ─── Deps ────────────────────────────────────────────────────────────────────
 
 const config = useRuntimeConfig()
+const route = useRoute()
+const router = useRouter()
+const { isLoggedIn } = useAuth()
 
-const { data, status, error, refresh } = await useFetch<TaskListResponse>(`${config.public.baseTarget}/api/tasks`)
+// ─── Definitions ─────────────────────────────────────────────────────────────
 
-const allTasks = computed(() => data.value?.tasks ?? [])
-
-// ─── Category definitions ─────────────────────────────────────────────────────
-
-const categoryDefs = [
-  { id: 'css',   label: 'CSS',        style: { color: 'var(--tag-css)',     background: 'var(--tag-css-bg)' } },
-  { id: 'js',    label: 'JavaScript', style: { color: 'var(--tag-js)',      background: 'var(--tag-js-bg)' } },
-  { id: 'ts',    label: 'TypeScript', style: { color: 'var(--tag-ts)',      background: 'var(--tag-ts-bg)' } },
-  { id: 'vue',   label: 'Vue',        style: { color: 'var(--tag-vue)',     background: 'var(--tag-vue-bg)' } },
-  { id: 'react', label: 'React',      style: { color: 'var(--tag-react)',   background: 'var(--tag-react-bg)' } },
-  { id: 'html',  label: 'HTML',       style: { color: 'var(--tag-html)',    background: 'var(--tag-html-bg)' } },
-  { id: 'svg',   label: 'SVG',        style: { color: 'var(--tag-svg)',     background: 'var(--tag-svg-bg)' } },
-  { id: 'a11y',  label: 'A11y',       style: { color: 'var(--tag-a11y)',    background: 'var(--tag-a11y-bg)' } },
+const languageDefs = [
+  { id: 'css',        label: 'CSS',        style: { color: 'var(--tag-css)',  background: 'var(--tag-css-bg)' } },
+  { id: 'html',       label: 'HTML',       style: { color: 'var(--tag-html)', background: 'var(--tag-html-bg)' } },
+  { id: 'javascript', label: 'JavaScript', style: { color: 'var(--tag-js)',   background: 'var(--tag-js-bg)' } },
+  { id: 'typescript', label: 'TypeScript', style: { color: 'var(--tag-ts)',   background: 'var(--tag-ts-bg)' } },
 ]
 
 const difficultyDefs = [
-  { id: 'easy',   label: 'Легко',   cls: 'badge-easy' },
-  { id: 'medium', label: 'Средне',  cls: 'badge-medium' },
-  { id: 'hard',   label: 'Сложно',  cls: 'badge-hard' },
-  { id: 'expert', label: 'Эксперт', cls: 'badge-expert' },
+  { id: 'easy',   label: 'Легко',  cls: 'badge-easy' },
+  { id: 'medium', label: 'Средне', cls: 'badge-medium' },
+  { id: 'hard',   label: 'Сложно', cls: 'badge-hard' },
 ]
 
 const statusOptions = [
@@ -44,83 +38,157 @@ const statusOptions = [
 ]
 
 const sortOptions = [
-  { value: 'popular',          label: 'По популярности' },
-  { value: 'acceptance-desc',  label: 'По % принятых ↓' },
-  { value: 'acceptance-asc',   label: 'По % принятых ↑' },
-  { value: 'difficulty-asc',   label: 'Сначала лёгкие' },
-  { value: 'difficulty-desc',  label: 'Сначала сложные' },
-  { value: 'newest',           label: 'Новые' },
+  { value: 'newest',     label: 'Новые' },
+  { value: 'popularity', label: 'По популярности' },
+  { value: 'acceptance', label: 'По % принятых' },
+  { value: 'easy_first', label: 'Сначала лёгкие' },
+  { value: 'hard_first', label: 'Сначала сложные' },
 ]
 
-// ─── Filter state ─────────────────────────────────────────────────────────────
+// ─── Filter state (initialized from URL) ─────────────────────────────────────
 
-const search = ref('')
-const selectedDifficulties = ref<string[]>([])
-const selectedCategories = ref<string[]>([])
-const selectedStatus = ref<Status>('all')
-const sortBy = ref<SortKey>('popular')
+function parseQueryArray(val: unknown): string[] {
+  if (!val) return []
+  return String(val).split(',').filter(Boolean)
+}
+
+const search = ref((route.query.search as string) || '')
+const debouncedSearch = ref(search.value)
+const selectedDifficulties = ref<string[]>(parseQueryArray(route.query.difficulty))
+const selectedLanguage = ref<string | null>((route.query.language as string) || null)
+const selectedStatus = ref<Status>((route.query.status as Status) || 'all')
+const sortBy = ref<SortKey>((route.query.sort as SortKey) || 'newest')
+const page = ref(Number(route.query.page) || 1)
 const mobileFiltersOpen = ref(false)
 
-// ─── Computed ─────────────────────────────────────────────────────────────────
+const LIMIT = 20
 
-const difficultyOrder: Record<Difficulty, number> = { easy: 0, medium: 1, hard: 2, expert: 3 }
+// ─── Search debounce ─────────────────────────────────────────────────────────
 
-const filteredTasks = computed(() => {
-  let result = allTasks.value
+let searchTimeout: ReturnType<typeof setTimeout>
 
-  if (search.value.trim()) {
-    const q = search.value.toLowerCase()
-    result = result.filter(t => t.title.toLowerCase().includes(q) || t.tags.some(tag => tag.toLowerCase().includes(q)))
-  }
-
-  if (selectedDifficulties.value.length)
-    result = result.filter(t => selectedDifficulties.value.includes(t.difficulty))
-
-  if (selectedCategories.value.length)
-    result = result.filter(t => t.categories.some(c => selectedCategories.value.includes(c)))
-
-  if (selectedStatus.value === 'solved')    result = result.filter(t => t.solved)
-  if (selectedStatus.value === 'attempted') result = result.filter(t => !t.solved && t.attempted)
-  if (selectedStatus.value === 'unsolved')  result = result.filter(t => !t.solved && !t.attempted)
-
-  return [...result].sort((a, b) => {
-    switch (sortBy.value) {
-      case 'popular':         return b.solutions - a.solutions
-      case 'acceptance-desc': return b.acceptance - a.acceptance
-      case 'acceptance-asc':  return a.acceptance - b.acceptance
-      case 'difficulty-asc':  return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]
-      case 'difficulty-desc': return difficultyOrder[b.difficulty] - difficultyOrder[a.difficulty]
-      default:                return 0
-    }
-  })
+watch(search, (val) => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    debouncedSearch.value = val
+  }, 400)
 })
 
+onUnmounted(() => clearTimeout(searchTimeout))
+
+// ─── Reset page on filter/sort change ────────────────────────────────────────
+
+watch([debouncedSearch, selectedDifficulties, selectedLanguage, selectedStatus, sortBy], () => {
+  page.value = 1
+})
+
+// ─── Reset status filter when logged out ─────────────────────────────────────
+
+watch(isLoggedIn, (val) => {
+  if (!val && selectedStatus.value !== 'all') {
+    selectedStatus.value = 'all'
+  }
+})
+
+// ─── Query params for API ────────────────────────────────────────────────────
+
+const queryParams = computed(() => {
+  const params: Record<string, string | number> = {
+    page: page.value,
+    limit: LIMIT,
+  }
+  if (debouncedSearch.value.trim()) params.search = debouncedSearch.value.trim()
+  if (sortBy.value !== 'newest') params.sort = sortBy.value
+  if (selectedDifficulties.value.length) params.difficulty = selectedDifficulties.value.join(',')
+  if (selectedLanguage.value) params.language = selectedLanguage.value
+  if (selectedStatus.value !== 'all') params.status = selectedStatus.value
+  return params
+})
+
+// ─── URL query sync ──────────────────────────────────────────────────────────
+
+const urlQuery = computed(() => {
+  const q: Record<string, string> = {}
+  if (page.value > 1) q.page = String(page.value)
+  if (debouncedSearch.value.trim()) q.search = debouncedSearch.value.trim()
+  if (sortBy.value !== 'newest') q.sort = sortBy.value
+  if (selectedDifficulties.value.length) q.difficulty = selectedDifficulties.value.join(',')
+  if (selectedLanguage.value) q.language = selectedLanguage.value
+  if (selectedStatus.value !== 'all') q.status = selectedStatus.value
+  return q
+})
+
+watch(urlQuery, (q) => {
+  router.replace({ query: q })
+}, { flush: 'post' })
+
+// ─── Data fetching ───────────────────────────────────────────────────────────
+
+const { data, status, error, refresh } = await useFetch<TaskListResponse>(`${config.public.baseTarget}/api/tasks`, {
+  query: queryParams,
+})
+
+const tasks = computed(() => data.value?.tasks ?? [])
+const total = computed(() => data.value?.total ?? 0)
+const totalPages = computed(() => Math.ceil(total.value / LIMIT))
+
+// ─── Pagination helpers ──────────────────────────────────────────────────────
+
+const paginationPages = computed(() => {
+  const pages: (number | '...')[] = []
+  const tp = totalPages.value
+  const cp = page.value
+
+  if (tp <= 7) {
+    for (let i = 1; i <= tp; i++) pages.push(i)
+    return pages
+  }
+
+  pages.push(1)
+  if (cp > 3) pages.push('...')
+
+  const start = Math.max(2, cp - 1)
+  const end = Math.min(tp - 1, cp + 1)
+  for (let i = start; i <= end; i++) pages.push(i)
+
+  if (cp < tp - 2) pages.push('...')
+  pages.push(tp)
+
+  return pages
+})
+
+// ─── Computed ────────────────────────────────────────────────────────────────
+
 const activeFiltersCount = computed(() =>
-  selectedDifficulties.value.length + selectedCategories.value.length + (selectedStatus.value !== 'all' ? 1 : 0),
+  selectedDifficulties.value.length + (selectedLanguage.value ? 1 : 0) + (selectedStatus.value !== 'all' ? 1 : 0),
 )
 
 const hasActiveFilters = computed(() => activeFiltersCount.value > 0 || search.value.trim() !== '')
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
 
 function toggleDifficulty(id: string) {
   const idx = selectedDifficulties.value.indexOf(id)
   idx === -1 ? selectedDifficulties.value.push(id) : selectedDifficulties.value.splice(idx, 1)
 }
 
-function toggleCategory(id: string) {
-  const idx = selectedCategories.value.indexOf(id)
-  idx === -1 ? selectedCategories.value.push(id) : selectedCategories.value.splice(idx, 1)
+function toggleLanguage(id: string) {
+  selectedLanguage.value = selectedLanguage.value === id ? null : id
 }
 
 function resetFilters() {
   search.value = ''
+  debouncedSearch.value = ''
+  clearTimeout(searchTimeout)
   selectedDifficulties.value = []
-  selectedCategories.value = []
+  selectedLanguage.value = null
   selectedStatus.value = 'all'
-  sortBy.value = 'popular'
+  sortBy.value = 'newest'
+  page.value = 1
 }
 
-function getCategoryDef(id: string) {
-  return categoryDefs.find(c => c.id === id)
+function getLanguageDef(id: string) {
+  return languageDefs.find(l => l.id === id)
 }
 </script>
 
@@ -131,7 +199,7 @@ function getCategoryDef(id: string) {
     <div class="mb-6 sm:mb-8">
       <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Задачи</h1>
       <p class="text-sm text-zinc-500 dark:text-zinc-400">
-        {{ allTasks.length }} задач по HTML, CSS, JavaScript, TypeScript, Vue и React
+        {{ total }} задач по HTML, CSS, JavaScript и TypeScript
       </p>
     </div>
 
@@ -140,7 +208,7 @@ function getCategoryDef(id: string) {
       <!-- ── SIDEBAR (desktop) ──────────────────────────────────────────── -->
       <aside class="hidden lg:flex flex-col w-56 xl:w-60 shrink-0">
 
-        <!-- Search — отделён бордером снизу -->
+        <!-- Search -->
         <div class="pb-5 mb-5 border-b border-zinc-200 dark:border-zinc-800">
           <UInput
             v-model="search"
@@ -166,58 +234,42 @@ function getCategoryDef(id: string) {
               <span class="px-2 py-0.5 rounded-full text-xs font-semibold shrink-0" :class="d.cls">
                 {{ d.label }}
               </span>
-              <span
-                class="ml-auto text-xs transition-colors shrink-0"
-                :class="selectedDifficulties.includes(d.id)
-                  ? 'text-zinc-600 dark:text-zinc-300'
-                  : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'"
-              >
-                {{ allTasks.filter(t => t.difficulty === d.id).length }}
-              </span>
               <UIcon
                 v-if="selectedDifficulties.includes(d.id)"
                 name="i-lucide-check"
-                class="size-3.5 text-violet-500 shrink-0"
+                class="ml-auto size-3.5 text-violet-500 shrink-0"
               />
             </button>
           </div>
         </div>
 
-        <!-- Category -->
+        <!-- Language -->
         <div class="mb-6">
           <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-3">Технология</p>
           <div class="flex flex-col gap-0.5">
             <button
-              v-for="cat in categoryDefs"
-              :key="cat.id"
+              v-for="lang in languageDefs"
+              :key="lang.id"
               class="group flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-colors text-left"
-              :class="selectedCategories.includes(cat.id)
+              :class="selectedLanguage === lang.id
                 ? 'bg-zinc-100 dark:bg-zinc-800'
                 : 'hover:bg-zinc-100 dark:hover:bg-zinc-800'"
-              @click="toggleCategory(cat.id)"
+              @click="toggleLanguage(lang.id)"
             >
               <span
                 class="w-2.5 h-2.5 rounded shrink-0"
-                :style="{ background: cat.style.color }"
+                :style="{ background: lang.style.color }"
               />
               <span
                 class="flex-1 text-sm transition-colors"
-                :class="selectedCategories.includes(cat.id)
+                :class="selectedLanguage === lang.id
                   ? 'text-zinc-900 dark:text-zinc-100 font-medium'
                   : 'text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100'"
               >
-                {{ cat.label }}
-              </span>
-              <span
-                class="text-xs transition-colors shrink-0"
-                :class="selectedCategories.includes(cat.id)
-                  ? 'text-zinc-600 dark:text-zinc-300'
-                  : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'"
-              >
-                {{ allTasks.filter(t => t.categories.includes(cat.id)).length }}
+                {{ lang.label }}
               </span>
               <UIcon
-                v-if="selectedCategories.includes(cat.id)"
+                v-if="selectedLanguage === lang.id"
                 name="i-lucide-check"
                 class="size-3.5 text-violet-500 shrink-0"
               />
@@ -225,8 +277,8 @@ function getCategoryDef(id: string) {
           </div>
         </div>
 
-        <!-- Status -->
-        <div class="mb-6">
+        <!-- Status (only for authenticated users) -->
+        <div v-if="isLoggedIn" class="mb-6">
           <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-3">Статус</p>
           <div class="flex flex-col gap-0.5">
             <button
@@ -319,27 +371,27 @@ function getCategoryDef(id: string) {
                 </div>
               </div>
 
-              <!-- Category chips -->
+              <!-- Language chips -->
               <div>
                 <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-2.5">Технология</p>
                 <div class="flex flex-wrap gap-2">
                   <button
-                    v-for="cat in categoryDefs"
-                    :key="cat.id"
+                    v-for="lang in languageDefs"
+                    :key="lang.id"
                     class="px-2.5 py-1 rounded-md text-xs font-medium transition-all"
-                    :style="cat.style"
-                    :class="selectedCategories.includes(cat.id)
+                    :style="lang.style"
+                    :class="selectedLanguage === lang.id
                       ? 'ring-2 ring-offset-1 ring-violet-400 dark:ring-offset-zinc-900'
                       : 'opacity-70'"
-                    @click="toggleCategory(cat.id)"
+                    @click="toggleLanguage(lang.id)"
                   >
-                    {{ cat.label }}
+                    {{ lang.label }}
                   </button>
                 </div>
               </div>
 
-              <!-- Status -->
-              <div>
+              <!-- Status (only for authenticated users) -->
+              <div v-if="isLoggedIn">
                 <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-2.5">Статус</p>
                 <div class="flex flex-wrap gap-2">
                   <button
@@ -384,13 +436,12 @@ function getCategoryDef(id: string) {
             </button>
           </span>
           <span
-            v-for="c in selectedCategories"
-            :key="`c-${c}`"
+            v-if="selectedLanguage"
             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium"
-            :style="getCategoryDef(c)?.style"
+            :style="getLanguageDef(selectedLanguage)?.style"
           >
-            {{ getCategoryDef(c)?.label }}
-            <button class="hover:opacity-70" @click="toggleCategory(c)">
+            {{ getLanguageDef(selectedLanguage)?.label }}
+            <button class="hover:opacity-70" @click="toggleLanguage(selectedLanguage!)">
               <UIcon name="i-lucide-x" class="size-3" />
             </button>
           </span>
@@ -399,8 +450,8 @@ function getCategoryDef(id: string) {
         <!-- Toolbar: count + sort -->
         <div class="flex items-center justify-between gap-3 mb-4">
           <p class="text-sm text-zinc-500 dark:text-zinc-400 shrink-0">
-            <span class="font-semibold text-zinc-900 dark:text-zinc-100">{{ filteredTasks.length }}</span>
-            {{ filteredTasks.length === 1 ? 'задача' : filteredTasks.length < 5 ? 'задачи' : 'задач' }}
+            <span class="font-semibold text-zinc-900 dark:text-zinc-100">{{ total }}</span>
+            {{ total === 1 ? 'задача' : total < 5 ? 'задачи' : 'задач' }}
           </p>
           <USelect
             v-model="sortBy"
@@ -431,9 +482,9 @@ function getCategoryDef(id: string) {
         </div>
 
         <!-- Task list -->
-        <div v-else-if="filteredTasks.length" class="space-y-2">
+        <div v-else-if="tasks.length" class="space-y-2">
           <NuxtLink
-            v-for="task in filteredTasks"
+            v-for="task in tasks"
             :key="task.id"
             :to="`/tasks/${task.slug}`"
             class="group flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-violet-200 dark:hover:border-violet-800/60 hover:shadow-sm transition-all block"
@@ -461,7 +512,7 @@ function getCategoryDef(id: string) {
                   class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold"
                   :class="`badge-${task.difficulty}`"
                 >
-                  {{ difficultyDefs.find(d => d.id === task.difficulty)?.label }}
+                  {{ difficultyDefs.find(d => d.id === task.difficulty)?.label ?? task.difficulty }}
                 </span>
               </div>
 
@@ -473,13 +524,21 @@ function getCategoryDef(id: string) {
               <!-- Tags + stats -->
               <div class="flex items-center gap-2 flex-wrap">
                 <div class="flex flex-wrap gap-1.5">
+                  <!-- Language badge -->
                   <span
-                    v-for="catId in task.categories"
-                    :key="catId"
+                    v-if="task.language && getLanguageDef(task.language)"
                     class="px-2 py-0.5 rounded text-xs font-medium"
-                    :style="getCategoryDef(catId)?.style"
+                    :style="getLanguageDef(task.language)!.style"
                   >
-                    {{ getCategoryDef(catId)?.label }}
+                    {{ getLanguageDef(task.language)!.label }}
+                  </span>
+                  <!-- Category tags -->
+                  <span
+                    v-for="cat in task.categories"
+                    :key="cat"
+                    class="px-2 py-0.5 rounded text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300"
+                  >
+                    {{ cat }}
                   </span>
                 </div>
                 <div class="ml-auto flex items-center gap-2 text-xs text-zinc-400 shrink-0">
@@ -502,6 +561,38 @@ function getCategoryDef(id: string) {
             Попробуйте изменить поисковый запрос или сбросить фильтры
           </p>
           <UButton label="Сбросить фильтры" variant="outline" color="neutral" @click="resetFilters" />
+        </div>
+
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="flex items-center justify-center gap-1.5 mt-6">
+          <UButton
+            icon="i-lucide-chevron-left"
+            variant="outline"
+            color="neutral"
+            size="sm"
+            :disabled="page <= 1"
+            @click="page--"
+          />
+          <template v-for="p in paginationPages" :key="p">
+            <span v-if="p === '...'" class="px-2 text-sm text-zinc-400">...</span>
+            <UButton
+              v-else
+              :label="String(p)"
+              :variant="p === page ? 'solid' : 'ghost'"
+              :color="p === page ? 'primary' : 'neutral'"
+              size="sm"
+              class="min-w-8"
+              @click="page = p as number"
+            />
+          </template>
+          <UButton
+            icon="i-lucide-chevron-right"
+            variant="outline"
+            color="neutral"
+            size="sm"
+            :disabled="page >= totalPages"
+            @click="page++"
+          />
         </div>
 
       </div>
