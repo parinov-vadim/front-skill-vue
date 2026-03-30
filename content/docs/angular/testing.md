@@ -1,6 +1,6 @@
 ---
 title: Тестирование Angular
-description: Тестирование Angular-приложений: TestBed для настройки окружения, тестирование компонентов и сервисов, моки HttpClient, spy-функции Jasmine и покрытие кода.
+description: "Тестирование Angular-приложений: TestBed для настройки окружения, тестирование компонентов и сервисов, моки HttpClient, spy-функции Jasmine и покрытие кода."
 section: angular
 difficulty: intermediate
 readTime: 12

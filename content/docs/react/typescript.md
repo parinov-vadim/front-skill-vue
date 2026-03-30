@@ -1,6 +1,6 @@
 ---
 title: React + TypeScript
-description: Типизация React-компонентов: FC, Props, generics, useState, useRef, useRef typing, event handlers и полезные паттерны.
+description: "Типизация React-компонентов: FC, Props, generics, useState, useRef, useRef typing, event handlers и полезные паттерны."
 section: react
 difficulty: intermediate
 readTime: 12

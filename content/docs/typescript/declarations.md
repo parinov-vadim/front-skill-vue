@@ -5,7 +5,7 @@ section: typescript
 difficulty: intermediate
 readTime: 10
 order: 14
-tags: [typescript, d.ts, declare, module augmentation, @types, typings]
+tags: [typescript, d.ts, declare, module augmentation, "@types", typings]
 ---
 
 ## Что такое файлы объявлений

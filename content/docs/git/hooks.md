@@ -1,5 +1,5 @@
 ---
-title: Git Hooks: автоматизация перед коммитом
+title: "Git Hooks: автоматизация перед коммитом"
 description: Git hooks — скрипты, которые запускаются автоматически при определённых событиях Git. Husky для управления хуками, lint-staged для линтинга только изменённых файлов, commitlint для проверки сообщений.
 section: git
 difficulty: intermediate

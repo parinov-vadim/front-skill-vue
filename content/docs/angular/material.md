@@ -1,5 +1,5 @@
 ---
-title: Angular Material: компоненты UI
+title: "Angular Material: компоненты UI"
 description: Angular Material — официальная библиотека UI-компонентов для Angular. Установка, темизация, таблицы, диалоги, snack bar, autocomplete и другие компоненты.
 section: angular
 difficulty: intermediate

@@ -1,6 +1,6 @@
 ---
 title: Тестирование React — Jest и React Testing Library
-description: Тестирование React-компонентов: рендер, поиск элементов, взаимодействие, моки, асинхронные тесты и покрытие кода.
+description: "Тестирование React-компонентов: рендер, поиск элементов, взаимодействие, моки, асинхронные тесты и покрытие кода."
 section: react
 difficulty: intermediate
 readTime: 14

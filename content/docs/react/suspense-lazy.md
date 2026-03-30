@@ -1,6 +1,6 @@
 ---
 title: Suspense и lazy — ленивая загрузка
-description: React.lazy и Suspense для code splitting: загрузка компонентов по требованию, fallback-UI, lazy-маршруты и Suspense для данных.
+description: "React.lazy и Suspense для code splitting: загрузка компонентов по требованию, fallback-UI, lazy-маршруты и Suspense для данных."
 section: react
 difficulty: intermediate
 readTime: 8

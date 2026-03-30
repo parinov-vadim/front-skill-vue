@@ -1,6 +1,6 @@
 ---
 title: React Router — маршрутизация
-description: Маршрутизация в React-приложении: React Router v7, nested routes, динамические параметры, guards, lazy loading страниц.
+description: "Маршрутизация в React-приложении: React Router v7, nested routes, динамические параметры, guards, lazy loading страниц."
 section: react
 difficulty: intermediate
 readTime: 12

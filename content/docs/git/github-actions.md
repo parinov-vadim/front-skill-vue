@@ -1,5 +1,5 @@
 ---
-title: GitHub Actions: CI/CD для фронтенда
+title: "GitHub Actions: CI/CD для фронтенда"
 description: GitHub Actions — встроенный CI/CD на GitHub. Автоматическая сборка, тестирование, линтинг и деплой фронтенд-проектов при каждом push и pull request.
 section: git
 difficulty: intermediate

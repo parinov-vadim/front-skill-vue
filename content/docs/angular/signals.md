@@ -1,5 +1,5 @@
 ---
-title: Angular Signals: реактивность нового поколения
+title: "Angular Signals: реактивность нового поколения"
 description: Signals — новая система реактивности в Angular (v17+). signal(), computed(), effect() — проще чем RxJS для большинства задач, синхронная реактивность без подписок.
 section: angular
 difficulty: intermediate

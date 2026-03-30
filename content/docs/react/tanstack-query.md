@@ -1,6 +1,6 @@
 ---
 title: TanStack Query — серверное состояние
-description: TanStack Query (React Query) — библиотека для работы с серверными данными: кэширование, автоматическое обновление, optimistic updates, пагинация и infinite scroll.
+description: "TanStack Query (React Query) — библиотека для работы с серверными данными: кэширование, автоматическое обновление, optimistic updates, пагинация и infinite scroll."
 section: react
 difficulty: intermediate
 readTime: 14

@@ -1,5 +1,5 @@
 ---
-title: Vue + Nuxt: SSR, server routes, auto-imports
+title: "Vue + Nuxt: SSR, server routes, auto-imports"
 description: Nuxt — фреймворк поверх Vue с SSR, файловой маршрутизацией, автоимпортами и server routes. Основы Nuxt для Vue-разработчика.
 section: vue
 difficulty: intermediate

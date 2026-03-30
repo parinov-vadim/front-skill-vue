@@ -1,6 +1,6 @@
 ---
 title: React.memo, useMemo, useCallback — оптимизация рендера
-description: Как избежать лишних ре-рендеров в React: React.memo для компонентов, useMemo для вычислений, useCallback для стабильных ссылок на функции.
+description: "Как избежать лишних ре-рендеров в React: React.memo для компонентов, useMemo для вычислений, useCallback для стабильных ссылок на функции."
 section: react
 difficulty: intermediate
 readTime: 10

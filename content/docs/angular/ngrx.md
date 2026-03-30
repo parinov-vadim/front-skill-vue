@@ -1,5 +1,5 @@
 ---
-title: NgRx: управление состоянием
+title: "NgRx: управление состоянием"
 description: NgRx — Redux-паттерн для Angular. Actions, Reducers, Selectors, Effects — предсказуемое управление состоянием в крупных приложениях.
 section: angular
 difficulty: advanced

@@ -1,6 +1,6 @@
 ---
 title: Декораторы в TypeScript
-description: Декораторы TypeScript — @decorator для классов, методов, свойств и параметров. Практические примеры: логирование, валидация, deprecated, memoize.
+description: "Декораторы TypeScript — @decorator для классов, методов, свойств и параметров. Практические примеры: логирование, валидация, deprecated, memoize."
 section: typescript
 difficulty: advanced
 readTime: 12

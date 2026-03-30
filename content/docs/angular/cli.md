@@ -1,5 +1,5 @@
 ---
-title: Angular CLI: установка и создание проекта
+title: "Angular CLI: установка и создание проекта"
 description: Angular CLI — официальный инструмент командной строки для создания, сборки и генерации кода Angular-приложений. Установка, команда ng new, генераторы компонентов, сервисов и guards.
 section: angular
 difficulty: beginner

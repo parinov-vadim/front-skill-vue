@@ -1,6 +1,6 @@
 ---
 title: Composables во Vue 3
-description: Composables — переиспользуемые функции на основе Composition API. Создание, конвенции именования, примеры: useFetch, useMouse, useLocalStorage, useDebounce.
+description: "Composables — переиспользуемые функции на основе Composition API. Создание, конвенции именования, примеры: useFetch, useMouse, useLocalStorage, useDebounce."
 section: vue
 difficulty: intermediate
 readTime: 12

@@ -1,6 +1,6 @@
 ---
 title: Плагины во Vue 3
-description: Создание и использование плагинов Vue — app.use(), provide/inject, директивы, миксины и реальные примеры: toast-плагин, i18n, аналитика.
+description: "Создание и использование плагинов Vue — app.use(), provide/inject, директивы, миксины и реальные примеры: toast-плагин, i18n, аналитика."
 section: vue
 difficulty: intermediate
 readTime: 10

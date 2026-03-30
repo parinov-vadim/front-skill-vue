@@ -1,6 +1,6 @@
 ---
 title: Оптимизация производительности Angular
-description: Оптимизация Angular-приложений: OnPush change detection, trackBy, deferrable views, virtual scrolling, lazy loading, tree-shaking и профилирование с Angular DevTools.
+description: "Оптимизация Angular-приложений: OnPush change detection, trackBy, deferrable views, virtual scrolling, lazy loading, tree-shaking и профилирование с Angular DevTools."
 section: angular
 difficulty: advanced
 readTime: 12

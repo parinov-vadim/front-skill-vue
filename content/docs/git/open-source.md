@@ -1,6 +1,6 @@
 ---
-title: Работа с Open Source: fork, upstream, pull request
-description: Как внести вклад в Open Source проекты: fork репозитория, настройка upstream, синхронизация, создание pull request и процесс ревью.
+title: "Работа с Open Source: fork, upstream, pull request"
+description: "Как внести вклад в Open Source проекты: fork репозитория, настройка upstream, синхронизация, создание pull request и процесс ревью."
 section: git
 difficulty: intermediate
 readTime: 11
@@ -14,7 +14,6 @@ Open Source — это не только «бесплатный софт». Вк
 - Прокачивает навыки на реальных кодовых базах
 - Расширяет портфолио (GitHub-профиль = резюме для разработчика)
 - Учит работать с код-ревью и стандартами крупных проектов
-- Помогает建立起 professional нетворк
 
 Не обязательно писать фичи — документация, баг-репорты, переводы и ответы на issues тоже считаются.
 

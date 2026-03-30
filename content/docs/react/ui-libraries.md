@@ -1,6 +1,6 @@
 ---
 title: UI-библиотеки для React
-description: Обзор UI-библиотек для React: Material UI, Ant Design, Shadcn/ui, Radix UI, Mantine. Сравнение, плюсы, минусы и когда какую использовать.
+description: "Обзор UI-библиотек для React: Material UI, Ant Design, Shadcn/ui, Radix UI, Mantine. Сравнение, плюсы, минусы и когда какую использовать."
 section: react
 difficulty: beginner
 readTime: 10

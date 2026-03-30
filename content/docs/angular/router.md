@@ -1,6 +1,6 @@
 ---
 title: Маршрутизация в Angular
-description: Angular Router — навигация между страницами SPA: настройка маршрутов, параметры, guards для защиты страниц, lazy loading модулей и resolver для предзагрузки данных.
+description: "Angular Router — навигация между страницами SPA: настройка маршрутов, параметры, guards для защиты страниц, lazy loading модулей и resolver для предзагрузки данных."
 section: angular
 difficulty: intermediate
 readTime: 12

@@ -1,6 +1,6 @@
 ---
 title: Next.js — фреймворк для React
-description: Next.js: App Router, маршрутизация на основе файлов, SSR, SSG, ISR, layout, loading, error — всё для продакшн React-приложения.
+description: "Next.js: App Router, маршрутизация на основе файлов, SSR, SSG, ISR, layout, loading, error — всё для продакшн React-приложения."
 section: react
 difficulty: intermediate
 readTime: 14

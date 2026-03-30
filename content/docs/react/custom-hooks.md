@@ -1,6 +1,6 @@
 ---
 title: Паттерны Custom Hooks
-description: Практические кастомные хуки React: useDebounce, useLocalStorage, useMedia, useToggle, useFetch и другие полезные паттерны.
+description: "Практические кастомные хуки React: useDebounce, useLocalStorage, useMedia, useToggle, useFetch и другие полезные паттерны."
 section: react
 difficulty: intermediate
 readTime: 12

@@ -1,5 +1,5 @@
 ---
-title: Conventional Commits: стандарт коммитов
+title: "Conventional Commits: стандарт коммитов"
 description: Conventional Commits — соглашение о формате сообщений коммита. feat, fix, breaking change, commitizen для интерактивного ввода, автоматический changelog и семантическое версионирование.
 section: git
 difficulty: intermediate

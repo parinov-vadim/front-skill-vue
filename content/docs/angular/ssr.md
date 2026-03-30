@@ -1,5 +1,5 @@
 ---
-title: Angular SSR: Server-Side Rendering
+title: "Angular SSR: Server-Side Rendering"
 description: Server-Side Rendering в Angular — рендеринг страниц на сервере для SEO и быстрой первой загрузки. Настройка SSR, hydration, transfer state, SSR для SEO-критичных страниц.
 section: angular
 difficulty: advanced

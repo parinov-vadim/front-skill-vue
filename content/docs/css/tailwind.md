@@ -5,7 +5,7 @@ section: css
 difficulty: beginner
 readTime: 10
 order: 21
-tags: [Tailwind CSS, utility-first, CSS фреймворк, Tailwind классы, Tailwind основы, responsive, @apply]
+tags: [Tailwind CSS, utility-first, CSS фреймворк, Tailwind классы, Tailwind основы, responsive, "@apply"]
 ---
 
 ## Что такое Tailwind CSS

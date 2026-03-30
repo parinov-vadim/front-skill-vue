@@ -1,5 +1,5 @@
 ---
-title: Code Review: лучшие практики
+title: "Code Review: лучшие практики"
 description: Code Review — процесс проверки кода другими разработчиками перед слиянием. Как давать ревью, как принимать, чеклист проверки и типичные ошибки.
 section: git
 difficulty: intermediate

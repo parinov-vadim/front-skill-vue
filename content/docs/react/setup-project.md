@@ -1,6 +1,6 @@
 ---
 title: Создание React приложения
-description: Как создать React-проект с нуля: Vite, структура папок, TypeScript, ESLint. Пошаговое руководство по настройке современного React-приложения.
+description: "Как создать React-проект с нуля: Vite, структура папок, TypeScript, ESLint. Пошаговое руководство по настройке современного React-приложения."
 section: react
 difficulty: beginner
 readTime: 10

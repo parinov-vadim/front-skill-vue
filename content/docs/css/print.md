@@ -5,7 +5,7 @@ section: css
 difficulty: beginner
 readTime: 7
 order: 19
-tags: [печать CSS, media print, стили для печати, разрывы страниц, page break, @page, print stylesheet]
+tags: [печать CSS, media print, стили для печати, разрывы страниц, page break, "@page", print stylesheet]
 ---
 
 ## Зачем нужны стили для печати

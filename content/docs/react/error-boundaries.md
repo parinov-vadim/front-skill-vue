@@ -1,6 +1,6 @@
 ---
 title: Error Boundaries — обработка ошибок
-description: Error Boundaries в React: перехват ошибок рендера, отображение fallback-UI, логирование ошибок и паттерны восстановления.
+description: "Error Boundaries в React: перехват ошибок рендера, отображение fallback-UI, логирование ошибок и паттерны восстановления."
 section: react
 difficulty: intermediate
 readTime: 8

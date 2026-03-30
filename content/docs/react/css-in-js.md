@@ -1,6 +1,6 @@
 ---
 title: CSS-in-JS — стили в React
-description: CSS-in-JS подходы в React: styled-components, Emotion, CSS Modules. Плюсы, минусы, сравнение и когда использовать.
+description: "CSS-in-JS подходы в React: styled-components, Emotion, CSS Modules. Плюсы, минусы, сравнение и когда использовать."
 section: react
 difficulty: intermediate
 readTime: 10

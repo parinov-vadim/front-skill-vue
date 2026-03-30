@@ -1,6 +1,6 @@
 ---
 title: Динамические и асинхронные компоненты Vue
-description: Динамические компоненты через <component :is=""> и асинхронная загрузка через defineAsyncComponent. Паттерны lazy loading и keep-alive.
+description: "Динамические компоненты через <component :is=\"\"> и асинхронная загрузка через defineAsyncComponent. Паттерны lazy loading и keep-alive."
 section: vue
 difficulty: intermediate
 readTime: 8

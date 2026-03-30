@@ -1,6 +1,6 @@
 ---
 title: HTTP-клиент в Angular
-description: Работа с HTTP-запросами в Angular: HttpClient, типизированные запросы, интерцепторы для авторизации и логирования, загрузка файлов, обработка ошибок.
+description: "Работа с HTTP-запросами в Angular: HttpClient, типизированные запросы, интерцепторы для авторизации и логирования, загрузка файлов, обработка ошибок."
 section: angular
 difficulty: intermediate
 readTime: 11

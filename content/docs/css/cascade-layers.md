@@ -5,7 +5,7 @@ section: css
 difficulty: intermediate
 readTime: 7
 order: 16
-tags: [@layer, cascade layers, каскад, CSS, приоритет стилей, @import]
+tags: ["@layer", cascade layers, каскад, CSS, приоритет стилей, "@import"]
 ---
 
 ## Проблема
