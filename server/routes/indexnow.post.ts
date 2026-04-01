@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'urls array is required' })
   }
 
-  const response = await $fetch(INDEXNOW_ENDPOINT, {
+  const response = await $fetch.raw(INDEXNOW_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: {
@@ -20,5 +20,5 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  return { success: true, submitted: body.urls.length, response }
+  return { success: true, submitted: body.urls.length, status: response.status }
 })
