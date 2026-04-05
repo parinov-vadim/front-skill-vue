@@ -42,6 +42,7 @@ const footerLinks = [
     title: 'Компания',
     links: [
       { label: 'О проекте', to: '/about' },
+      { label: 'FAQ', to: '/faq' },
       { label: 'Блог', to: '/blog' },
       { label: 'Условия использования', to: '/terms' },
       { label: 'Конфиденциальность', to: '/privacy' },
