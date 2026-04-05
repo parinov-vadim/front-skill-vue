@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     sources: ['/__sitemap__/urls'],
   },
   robots: {
-    disallow: ['/admin'],
+    disallow: ['/admin', '/auth', '/ui'],
   },
   icon: {
     localApiEndpoint: '/_nuxt_icon',

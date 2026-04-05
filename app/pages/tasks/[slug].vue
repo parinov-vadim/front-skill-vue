@@ -31,7 +31,25 @@ const difficultyDefs: Record<Difficulty, { label: string; cls: string }> = {
 
 const { data: task, status, error } = await useFetch<TaskDetail>(`${config.public.baseTarget}/api/tasks/${slug}`)
 
-useHead({ title: computed(() => task.value ? `${task.value.title} — FrontSkill` : 'Задача не найдена — FrontSkill') })
+const difficultyLabels: Record<Difficulty, string> = {
+  easy: 'лёгкая',
+  medium: 'средняя',
+  hard: 'сложная',
+  expert: 'экспертная',
+}
+
+useSeoMeta({
+  title: computed(() => task.value
+    ? `${task.value.title} — ${difficultyLabels[task.value.difficulty]} задача по ${task.value.categories[0]?.toUpperCase() ?? 'фронтенду'} | FrontSkill`
+    : 'Задача не найдена — FrontSkill'),
+  description: computed(() => task.value
+    ? `Решите задачу «${task.value.title}» (${difficultyLabels[task.value.difficulty]}) на FrontSkill. ${task.value.description.slice(0, 140)}...`
+    : ''),
+  ogTitle: computed(() => task.value?.title ?? ''),
+  ogDescription: computed(() => task.value?.description.slice(0, 200) ?? ''),
+  ogUrl: computed(() => `https://frontskill.ru/tasks/${slug}`),
+  twitterCard: 'summary',
+})
 
 // ─── State ───────────────────────────────────────────────────────────────────
 

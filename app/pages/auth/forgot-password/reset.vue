@@ -4,6 +4,8 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({ layout: 'auth' })
 
+useSeoMeta({ robots: 'noindex, nofollow' })
+
 const { $api } = useNuxtApp()
 const toast = useToast()
 const { resetToken, clear: clearForgotPassword } = useForgotPassword()

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ name: 'ui' })
+useSeoMeta({ robots: 'noindex, nofollow' })
 
 const sections = [
   { id: 'colors', label: 'Цвета' },

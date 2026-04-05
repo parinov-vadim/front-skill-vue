@@ -3,8 +3,13 @@ const { DOCS_SECTIONS } = useDocs()
 
 // ─── SEO ──────────────────────────────────────────────────────────────
 useSeoMeta({
-  title: 'Документация — FrontSkill',
-  description: 'Справочник по основным технологиям фронтенд-разработки: JavaScript, CSS, HTML, Vue, React, Angular, Git',
+  title: 'Документация по фронтенд-разработке — JavaScript, CSS, HTML, Vue, React | FrontSkill',
+  description: 'Бесплатный справочник по фронтенд-технологиям. Статьи по JavaScript, CSS, HTML, TypeScript, Vue, React, Angular, Git и инструментам разработки. Для начинающих и опытных разработчиков.',
+  keywords: 'справочник javascript, документация css, учебник html, руководство vue, руководство react, фронтенд документация, изучение веб-разработки, учебник по программированию',
+  ogTitle: 'Документация по фронтенд-разработке — FrontSkill',
+  ogDescription: 'Бесплатный справочник: JavaScript, CSS, HTML, TypeScript, Vue, React, Angular, Git.',
+  ogUrl: 'https://frontskill.ru/docs',
+  twitterCard: 'summary',
 })
 
 // ─── Stats per section ────────────────────────────────────────────────

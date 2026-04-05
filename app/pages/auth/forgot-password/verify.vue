@@ -1,6 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
 
+useSeoMeta({ robots: 'noindex, nofollow' })
+
 const { $api } = useNuxtApp()
 const toast = useToast()
 const { email, resetToken } = useForgotPassword()

@@ -4,6 +4,11 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({ layout: 'auth' })
 
+useSeoMeta({
+  title: 'Восстановление пароля — FrontSkill',
+  robots: 'noindex, nofollow',
+})
+
 const { $api } = useNuxtApp()
 const toast = useToast()
 const { email: savedEmail } = useForgotPassword()

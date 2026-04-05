@@ -11,10 +11,17 @@ const { data: profile, status, error } = await useFetch<UserProfile>(
   `${config.public.baseTarget}/api/users/${username}`,
 )
 
-useHead({
+useSeoMeta({
   title: computed(() =>
-    profile.value ? `${profile.value.username} — FrontSkill` : 'Профиль не найден — FrontSkill',
+    profile.value ? `${profile.value.username} — профиль разработчика | FrontSkill` : 'Профиль не найден — FrontSkill',
   ),
+  description: computed(() =>
+    profile.value ? `Профиль ${profile.value.username} на FrontSkill — решённые задачи, рейтинг и статистика фронтенд-разработчика.` : '',
+  ),
+  ogTitle: computed(() => profile.value ? `${profile.value.username} — FrontSkill` : ''),
+  ogDescription: computed(() => profile.value ? `Профиль и статистика ${profile.value.username} на FrontSkill.` : ''),
+  ogUrl: computed(() => `https://frontskill.ru/users/${username}`),
+  twitterCard: 'summary',
 })
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

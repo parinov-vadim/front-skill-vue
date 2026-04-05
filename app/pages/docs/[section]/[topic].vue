@@ -45,8 +45,12 @@ const nextTopic = computed(() =>
 
 // ─── SEO ──────────────────────────────────────────────────────────────
 useSeoMeta({
-  title: `${page.value?.title} — FrontSkill`,
+  title: `${page.value?.title} — ${sectionMeta.value?.label} | FrontSkill`,
   description: page.value?.description as string,
+  ogTitle: `${page.value?.title} — FrontSkill`,
+  ogDescription: page.value?.description as string,
+  ogUrl: `https://frontskill.ru${route.path}`,
+  twitterCard: 'summary',
 })
 
 // ─── Difficulty labels ─────────────────────────────────────────────────

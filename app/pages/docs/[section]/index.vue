@@ -26,8 +26,12 @@ if (!sectionMeta.value) {
 
 // ─── SEO ──────────────────────────────────────────────────────────────
 useSeoMeta({
-  title: `${sectionMeta.value?.label} — Документация FrontSkill`,
+  title: `${sectionMeta.value?.label} — Документация FrontSkill | Руководство и справочник`,
   description: sectionMeta.value?.description,
+  ogTitle: `${sectionMeta.value?.label} — Документация FrontSkill`,
+  ogDescription: sectionMeta.value?.description,
+  ogUrl: `https://frontskill.ru/docs/${sectionId.value}`,
+  twitterCard: 'summary',
 })
 
 // ─── Difficulty labels ─────────────────────────────────────────────────

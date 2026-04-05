@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import type { TaskListResponse } from '~/types/task'
 
-useHead({ title: 'Задачи — FrontSkill' })
+useSeoMeta({
+  title: 'Каталог задач по фронтенду — HTML, CSS, JavaScript, Vue, React | FrontSkill',
+  description: 'Выбирайте из 500+ задач по фронтенд-разработке. Фильтрация по языку, сложности и статусу. Задачи по CSS-вёрстке, JavaScript, TypeScript, Vue и React с автопроверкой.',
+  keywords: 'задачи по фронтенду, задачи по css, задачи по javascript, задачи по верстке, задачи для frontend разработчика, практика css, практика javascript, задачи по vue, задачи по react, задачи по typescript, каталог задач программирование',
+  ogTitle: 'Каталог задач — FrontSkill',
+  ogDescription: '500+ задач по фронтенд-разработке. HTML, CSS, JavaScript, TypeScript, Vue, React.',
+  ogUrl: 'https://frontskill.ru/tasks',
+  twitterCard: 'summary_large_image',
+})
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

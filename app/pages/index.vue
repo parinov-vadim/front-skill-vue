@@ -1,22 +1,17 @@
 <script setup lang="ts">
-useHead({
-  title: 'FrontSkill — Задачи по фронтенд-разработке',
-  meta: [
-    {
-      name: 'description',
-      content: 'Практикуйте HTML, CSS, JavaScript, TypeScript, Vue и React на реальных задачах с живым превью в браузере. Бесплатная платформа для подготовки к фронтенд-собеседованиям.',
-    },
-    {
-      name: 'keywords',
-      content: 'фронтенд задачи, задачи по css, задачи по javascript, практика программирования, подготовка к собеседованию фронтенд, leetcode frontend, html css js практика, typescript задачи, vue задачи, react задачи',
-    },
-    { property: 'og:title', content: 'FrontSkill — Задачи по фронтенд-разработке' },
-    {
-      property: 'og:description',
-      content: 'Реальные задачи по HTML, CSS, JS, TS, Vue и React. Живой предпросмотр. Полностью бесплатно.',
-    },
-    { property: 'og:type', content: 'website' },
-  ],
+useSeoMeta({
+  title: 'FrontSkill — Задачи по фронтенд-разработке | Практика HTML, CSS, JavaScript',
+  description: 'Бесплатная платформа с 500+ задачами по HTML, CSS, JavaScript, TypeScript, Vue и React. Решайте реальные фронтенд-задачи с живым превью в браузере. Подготовка к собеседованиям для frontend-разработчиков.',
+  keywords: 'фронтенд задачи, задачи по css, задачи по javascript, практика программирования, подготовка к собеседованию фронтенд, leetcode frontend, тренажёр верстки, задачи по html, typescript задачи, vue задачи, react задачи, фронтенд тренажёр, веб-разработка практика, css задачи онлайн, javascript задачи онлайн, интерактивные задачи по программированию',
+  ogTitle: 'FrontSkill — Задачи по фронтенд-разработке',
+  ogDescription: 'Решайте 500+ реальных задач по HTML, CSS, JS, TS, Vue и React с живым превью. Бесплатно.',
+  ogType: 'website',
+  ogUrl: 'https://frontskill.ru',
+  ogLocale: 'ru_RU',
+  ogSiteName: 'FrontSkill',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'FrontSkill — Задачи по фронтенд-разработке',
+  twitterDescription: 'Бесплатная платформа с 500+ задачами по фронтенду. Живой превью в браузере.',
 })
 
 const stats = [

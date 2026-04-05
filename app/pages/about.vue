@@ -1,16 +1,12 @@
 <script setup lang="ts">
-useHead({
-  title: 'О проекте — FrontSkill',
-  meta: [
-    {
-      name: 'description',
-      content: 'FrontSkill — бесплатная платформа для практики HTML, CSS, JavaScript, TypeScript, Vue и React. Реальные задачи, живой предпросмотр, русскоязычное сообщество разработчиков.',
-    },
-    {
-      name: 'keywords',
-      content: 'frontskill о проекте, платформа для фронтендеров, практика программирования, изучение frontend, задачи по веб-разработке',
-    },
-  ],
+useSeoMeta({
+  title: 'О проекте FrontSkill — бесплатная платформа для фронтенд-разработчиков',
+  description: 'FrontSkill — бесплатная платформа для практики фронтенд-разработки. 500+ задач по HTML, CSS, JavaScript, TypeScript, Vue и React. Живой предпросмотр кода, русскоязычное сообщество, подготовка к собеседованиям.',
+  keywords: 'frontskill, платформа для фронтендеров, практика программирования, изучение frontend, задачи по веб-разработке, бесплатные задачи по программированию, тренажёр фронтенд',
+  ogTitle: 'О проекте FrontSkill',
+  ogDescription: 'Бесплатная платформа для практики фронтенд-разработки с задачами и живым превью.',
+  ogUrl: 'https://frontskill.ru/about',
+  twitterCard: 'summary',
 })
 </script>
 

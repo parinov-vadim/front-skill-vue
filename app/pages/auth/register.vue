@@ -4,6 +4,11 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({ layout: 'auth' })
 
+useSeoMeta({
+  title: 'Регистрация — FrontSkill',
+  robots: 'noindex, nofollow',
+})
+
 const { $api } = useNuxtApp()
 const toast = useToast()
 
