@@ -32,7 +32,26 @@ useSeoMeta({
   ogDescription: sectionMeta.value?.description,
   ogUrl: `https://frontskill.ru/docs/${sectionId.value}`,
   twitterCard: 'summary',
+  twitterTitle: `${sectionMeta.value?.label} — Документация FrontSkill`,
+  twitterDescription: sectionMeta.value?.description,
 })
+
+// ─── Schema.org ──────────────────────────────────────────────────────
+useSchemaOrg([
+  defineWebPage({
+    '@type': 'CollectionPage',
+    'name': `${sectionMeta.value?.label} — Документация FrontSkill`,
+    'description': sectionMeta.value?.description,
+    'inLanguage': 'ru',
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Документация', item: '/docs' },
+      { name: sectionMeta.value?.label ?? '' },
+    ],
+  }),
+])
 
 // ─── Difficulty labels ─────────────────────────────────────────────────
 const difficultyLabels: Record<string, string> = {

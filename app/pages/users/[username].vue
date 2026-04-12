@@ -22,7 +22,21 @@ useSeoMeta({
   ogDescription: computed(() => profile.value ? `Профиль и статистика ${profile.value.username} на FrontSkill.` : ''),
   ogUrl: computed(() => `https://frontskill.ru/users/${username}`),
   twitterCard: 'summary',
+  twitterTitle: computed(() => profile.value ? `${profile.value.username} — FrontSkill` : ''),
+  twitterDescription: computed(() => profile.value ? `Профиль и статистика ${profile.value.username} на FrontSkill.` : ''),
 })
+
+if (profile.value) {
+  useSchemaOrg([
+    defineBreadcrumb({
+      itemListElement: [
+        { name: 'Главная', item: '/' },
+        { name: 'Рейтинг', item: '/leaderboard' },
+        { name: profile.value.username },
+      ],
+    }),
+  ])
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

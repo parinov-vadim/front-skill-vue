@@ -13,6 +13,8 @@ export default defineContentConfig({
         readTime: z.number().optional(),
         tags: z.array(z.string()).optional(),
         order: z.number().optional(),
+        datePublished: z.string().optional(),
+        dateModified: z.string().optional(),
       }),
     }),
   },

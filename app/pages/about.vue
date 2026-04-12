@@ -7,7 +7,18 @@ useSeoMeta({
   ogDescription: 'Бесплатная платформа для практики фронтенд-разработки с задачами и живым превью.',
   ogUrl: 'https://frontskill.ru/about',
   twitterCard: 'summary',
+  twitterTitle: 'О проекте FrontSkill',
+  twitterDescription: 'Бесплатная платформа для практики фронтенд-разработки с задачами и живым превью.',
 })
+
+useSchemaOrg([
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'О проекте' },
+    ],
+  }),
+])
 </script>
 
 <template>

@@ -9,7 +9,22 @@ useSeoMeta({
   ogDescription: '500+ задач по фронтенд-разработке. HTML, CSS, JavaScript, TypeScript, Vue, React.',
   ogUrl: 'https://frontskill.ru/tasks',
   twitterCard: 'summary_large_image',
+  twitterTitle: 'Каталог задач — FrontSkill',
+  twitterDescription: '500+ задач по фронтенд-разработке. HTML, CSS, JavaScript, TypeScript, Vue, React.',
 })
+
+useSchemaOrg([
+  defineWebPage({
+    '@type': 'CollectionPage',
+    'name': 'Каталог задач — FrontSkill',
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Задачи' },
+    ],
+  }),
+])
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

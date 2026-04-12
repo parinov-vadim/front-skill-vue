@@ -64,27 +64,25 @@ useSeoMeta({
   ogDescription: 'Ответы на частые вопросы о платформе FrontSkill.',
   ogUrl: 'https://frontskill.ru/faq',
   twitterCard: 'summary',
+  twitterTitle: 'FAQ — FrontSkill',
+  twitterDescription: 'Ответы на частые вопросы о платформе FrontSkill.',
 })
 
-useHead({
-  script: [
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        'mainEntity': faqItems.map(item => ({
-          '@type': 'Question',
-          'name': item.question,
-          'acceptedAnswer': {
-            '@type': 'Answer',
-            'text': item.answer,
-          },
-        })),
-      }),
-    },
-  ],
-})
+useSchemaOrg([
+  defineWebPage({
+    '@type': 'FAQPage',
+  }),
+  ...faqItems.map(item => defineQuestion({
+    name: item.question,
+    acceptedAnswer: item.answer,
+  })),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Частые вопросы' },
+    ],
+  }),
+])
 
 // ─── Accordion ───────────────────────────────────────────────────────────────
 

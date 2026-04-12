@@ -11,7 +11,18 @@ useSeoMeta({
   ogDescription: 'Топ фронтенд-разработчиков по XP, стрикам и решённым задачам.',
   ogUrl: 'https://frontskill.ru/leaderboard',
   twitterCard: 'summary',
+  twitterTitle: 'Рейтинг фронтенд-разработчиков — FrontSkill',
+  twitterDescription: 'Топ фронтенд-разработчиков по XP, стрикам и решённым задачам.',
 })
+
+useSchemaOrg([
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Рейтинг' },
+    ],
+  }),
+])
 
 // ─── Pagination ──────────────────────────────────────────────────────────────
 

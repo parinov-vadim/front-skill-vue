@@ -49,7 +49,21 @@ useSeoMeta({
   ogDescription: computed(() => task.value?.description.slice(0, 200) ?? ''),
   ogUrl: computed(() => `https://frontskill.ru/tasks/${slug}`),
   twitterCard: 'summary',
+  twitterTitle: computed(() => task.value?.title ?? ''),
+  twitterDescription: computed(() => task.value?.description.slice(0, 200) ?? ''),
 })
+
+if (task.value) {
+  useSchemaOrg([
+    defineBreadcrumb({
+      itemListElement: [
+        { name: 'Главная', item: '/' },
+        { name: 'Задачи', item: '/tasks' },
+        { name: task.value.title },
+      ],
+    }),
+  ])
+}
 
 // ─── State ───────────────────────────────────────────────────────────────────
 

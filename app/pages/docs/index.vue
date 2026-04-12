@@ -10,7 +10,25 @@ useSeoMeta({
   ogDescription: 'Бесплатный справочник: JavaScript, CSS, HTML, TypeScript, Vue, React, Angular, Git.',
   ogUrl: 'https://frontskill.ru/docs',
   twitterCard: 'summary',
+  twitterTitle: 'Документация по фронтенд-разработке — FrontSkill',
+  twitterDescription: 'Бесплатный справочник: JavaScript, CSS, HTML, TypeScript, Vue, React, Angular, Git.',
 })
+
+// ─── Schema.org ──────────────────────────────────────────────────────
+useSchemaOrg([
+  defineWebPage({
+    '@type': 'CollectionPage',
+    'name': 'Документация по фронтенд-разработке — FrontSkill',
+    'description': 'Бесплатный справочник по фронтенд-технологиям. Статьи по JavaScript, CSS, HTML, TypeScript, Vue, React, Angular, Git и инструментам разработки.',
+    'inLanguage': 'ru',
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Документация' },
+    ],
+  }),
+])
 
 // ─── Stats per section ────────────────────────────────────────────────
 const { data: allPages } = await useAsyncData('docs-all', () =>

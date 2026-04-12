@@ -51,7 +51,44 @@ useSeoMeta({
   ogDescription: page.value?.description as string,
   ogUrl: `https://frontskill.ru${route.path}`,
   twitterCard: 'summary',
+  twitterTitle: `${page.value?.title} — FrontSkill`,
+  twitterDescription: page.value?.description as string,
 })
+
+// ─── Schema.org ──────────────────────────────────────────────────────
+const proficiencyMap: Record<string, string> = {
+  beginner: 'Beginner',
+  intermediate: 'Expert',
+  advanced: 'Expert',
+}
+
+const datePublished = (page.value?.datePublished as string | undefined) ?? '2026-04-04'
+const difficulty = page.value?.difficulty as string | undefined
+
+useSchemaOrg([
+  defineArticle<{ proficiencyLevel: string }>({
+    '@type': 'TechArticle',
+    'headline': page.value?.title ?? '',
+    'description': (page.value?.description as string) ?? '',
+    'inLanguage': 'ru',
+    'datePublished': datePublished,
+    'dateModified': (page.value?.dateModified as string | undefined) ?? datePublished,
+    'author': {
+      name: 'FrontSkill',
+      url: 'https://frontskill.ru',
+    },
+    'about': sectionMeta.value?.label ?? '',
+    'proficiencyLevel': difficulty ? proficiencyMap[difficulty] : 'Beginner',
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Главная', item: '/' },
+      { name: 'Документация', item: '/docs' },
+      { name: sectionMeta.value?.label ?? '', item: `/docs/${sectionId.value}` },
+      { name: page.value?.title ?? '' },
+    ],
+  }),
+])
 
 // ─── Difficulty labels ─────────────────────────────────────────────────
 const difficultyLabels: Record<string, string> = {
